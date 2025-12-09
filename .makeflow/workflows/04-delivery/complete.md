@@ -229,23 +229,54 @@ Update statistics:
 
 ### Step 6: Delete Work Folder
 
-**After verifying history is created**:
+**🚨 REQUIRED STEP - DO NOT SKIP 🚨**
+
+Work folders MUST be deleted after summarizing to history. This is not optional.
+
+**Why deletion is mandatory**:
+- ✅ Keeps repository clean and organized
+- ✅ Enforces work/history separation design
+- ✅ Work folders are for active development only
+- ✅ History folders provide permanent record
+- ✅ Prevents confusion between active and completed work
+
+**Deletion Checklist**:
+- [ ] History folder created with all files (SUMMARY.md, PR-LINK.md, CHANGES.md)
+- [ ] History INDEX.md updated with entry
+- [ ] History files committed to repository
+- [ ] Verified history is complete (all important info captured)
+- [ ] Ready to delete work folder
+
+**After completing checklist above**:
 
 ```bash
-# Remove work folder
+# 1. Verify history exists
+ls .makeflow/history/[YYYY-MM-DD]-[feature-name]/
+
+# 2. Remove work folder (REQUIRED!)
 rm -rf .makeflow/work/[feature-name]
 
-# Commit history
+# 3. Commit history and deletion
 git add .makeflow/history/
+git add .makeflow/work/
 git commit -m "docs: Archive [feature-name] to history
 
 - Summary created
-- PR linked
+- PR linked  
 - Changes documented
-- Work folder cleaned up"
+- Work folder deleted (cleanup)"
 
+# 4. Push changes
 git push
 ```
+
+**Note**: Work folder can always be recovered from git history if absolutely needed:
+```bash
+git log -- .makeflow/work/[feature-name]/
+git show <commit>:.makeflow/work/[feature-name]/AGENTS.md
+```
+
+**But this should be rare** - history folder should contain everything important.
 
 ### Step 7: Present Completion
 
@@ -463,4 +494,3 @@ or
 ---
 
 **End of Workflow**
-

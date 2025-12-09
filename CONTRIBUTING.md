@@ -4,6 +4,75 @@ Thank you for your interest in contributing to makeflow! 🎉
 
 ---
 
+## 🔄 Using Makeflow Workflows (Eat Our Own Dog Food!)
+
+**makeflow contributions should use makeflow workflows** - we practice what we preach!
+
+### For Non-Trivial Changes
+
+Use the workflow system for any change that's more than a simple typo or formatting fix:
+
+```markdown
+# 1. Create a work folder
+mkdir .makeflow/work/NNN-your-feature-name
+
+# 2. Create AGENTS.md to track your work
+# (See .makeflow/templates/agents-template.md)
+
+# 3. Follow the appropriate workflow
+# For new workflow: Use .makeflow/workflows/01-intake/from-idea.md
+# For bug fix: Use .makeflow/workflows/01-intake/from-bug.md
+# For improvement: Use .makeflow/workflows/02-planning/create-plan.md
+```
+
+**Why?**
+- ✅ **Validates the system** - Using makeflow improves makeflow
+- ✅ **Creates examples** - Your work becomes a reference for others
+- ✅ **Improves quality** - Structured process catches issues early
+- ✅ **Builds confidence** - You'll understand the system better
+
+**Example**: See `.makeflow/history/2025-12-09-001-dogfooding-implementation/` for the first work folder that established this practice!
+
+### For Trivial Changes
+
+**Skip workflows for**:
+- Typo fixes
+- Formatting/whitespace
+- Broken links
+- Simple documentation corrections
+
+**Just**:
+1. Make the change
+2. Commit with clear message
+3. Create PR
+
+### Quick Reference
+
+**Adding a new workflow**:
+```markdown
+@ai Use .makeflow/workflows/01-intake/from-idea.md
+
+Feature Idea: Add workflow for [use case]
+Context: [Why it's needed]
+```
+
+**Fixing a bug in existing workflow**:
+```markdown
+@ai Use .makeflow/workflows/01-intake/from-bug.md
+
+Bug: [workflow-name] has [issue]
+Impact: [Who's affected]
+```
+
+**Improving documentation**:
+```markdown
+@ai Use .makeflow/workflows/02-planning/create-plan.md
+
+Improvement: Update [doc] with [enhancement]
+```
+
+---
+
 ## Ways to Contribute
 
 ### 1. Report Bugs or Issues
@@ -161,4 +230,3 @@ By contributing, you agree that your contributions will be licensed under the MI
 ---
 
 **Thank you for helping make makeflow better!** 🚀
-
