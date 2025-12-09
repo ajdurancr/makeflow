@@ -1,6 +1,5 @@
-# makeflow work-in-progress (not committed)
-.makeflow/work/
+# makeflow - No gitignore needed!
+# Work folders ARE committed for cloud AI tools to access context
 
-# Keep history folder (summaries are committed)
-!.makeflow/history/
+# Add your project-specific ignores below
 

@@ -1,0 +1,20 @@
+# This folder is gitignored
+
+Work-in-progress folders are created here during development but not committed.
+
+Example structure:
+```
+work/
+└── feature-name/
+    ├── AGENTS.md           # Entry point for AI agents
+    ├── spec.md             # Feature specification
+    ├── plan.md             # Task plan
+    ├── decisions.md        # Design decisions
+    └── notes.md            # Development notes
+```
+
+When a feature is complete, the work folder is:
+1. Summarized
+2. Moved to `.makeflow/history/YYYY-MM-DD-feature-name/`
+3. Deleted (this keeps the repo clean)
+

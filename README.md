@@ -1,95 +1,47 @@
-# 🚀 makeflow
+# makeflow
 
-**A lightweight, AI-agnostic specification-driven development workflow system**
+**AI-agnostic, specification-driven development workflows**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](package.json)
-
-> Track your features from spec to ship. Work with any AI tool. Copy to any project.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ---
 
-## ⚡ Quick Start (60 seconds)
-
-### 1. Copy `.makeflow/` to Your Project
+## 🚀 60-Second Quick Start
 
 ```bash
-# Clone makeflow
-git clone https://github.com/ajdurancr/makeflow.git
+# 1. Copy makeflow to your project
+cp -r .makeflow your-project/
 
-# Copy the workflow system to your project
-cp -r makeflow/.makeflow your-project/
-
-# That's it! You're ready to use makeflow.
+# 2. Start your first feature
+cd your-project
 ```
 
-### 2. Start Your First Workflow
-
-Pick your AI tool and use the workflow:
-
-**With Codegen:**
 ```markdown
-@codegen Use .makeflow/workflows/01-intake/from-ticket.md
+@ai Use .makeflow/workflows/01-intake/from-ticket.md
 
-Linear Ticket: PROJ-123
+Ticket: YOUR-TICKET-ID
 ```
 
-**With Cursor:**
-```markdown
-@Cursor Follow .makeflow/workflows/01-intake/from-ticket.md
-
-Linear Ticket: PROJ-123
-```
-
-**With Claude Code:**
-```markdown
-@Claude Follow .makeflow/workflows/01-intake/from-ticket.md
-
-Linear Ticket: PROJ-123
-```
-
-### 3. Track Your Progress
-
-makeflow automatically creates:
-- `.makeflow/work/feature-name/` - Your active work-in-progress
-- `.makeflow/history/YYYY-MM-DD-feature-name/` - Completed & summarized
+**That's it!** The AI will guide you through the entire process.
 
 ---
 
-## 🎯 What is makeflow?
+## What is makeflow?
 
-**makeflow** is a specification-driven development workflow system designed to:
+**makeflow** helps developers work effectively with AI tools by providing clear, structured workflows for every stage of development.
 
-✅ **Work with any AI tool** - Codegen, Cursor, Claude, or your favorite AI assistant  
-✅ **Track everything** - From first spec to final ship, all changes documented  
-✅ **Portable** - Copy to any project, zero configuration needed  
-✅ **Junior-to-senior friendly** - Clear workflows for all skill levels  
-✅ **Zero dependencies** - Pure markdown, works everywhere  
+### ✨ Key Features
 
----
-
-## 📚 What's Inside
-
-```
-.makeflow/
-├── workflows/              # 4-stage workflow system
-│   ├── 01-intake/         # Clarify requirements
-│   ├── 02-planning/       # Create specs and plans
-│   ├── 03-execution/      # Build with validation
-│   └── 04-delivery/       # Ship and document
-├── work/                   # Active work-in-progress (gitignored)
-│   └── feature-name/      # Current feature tracking
-├── history/               # Completed work summaries
-│   ├── INDEX.md           # All completed work
-│   └── YYYY-MM-DD-feature/
-├── docs/                  # Project documentation index
-└── templates/             # Prompt templates
-
-```
+- **📋 Specification-Driven** - Every change starts with clear requirements
+- **🤖 AI-Agnostic** - Works with Codegen, Cursor, Claude, ChatGPT, any AI tool
+- **📊 Complete Tracking** - From first idea to shipped code
+- **🧹 Clean Repos** - Work folders → concise history summaries
+- **📦 Zero Dependencies** - Pure markdown, copy to any project
+- **🔄 Flexible Workflows** - Use what you need, skip what you don't
 
 ---
 
-## 🔄 The 4-Stage Workflow
+## The 4-Stage Workflow
 
 ```
 ┌──────────┐      ┌──────────┐      ┌──────────┐      ┌──────────┐
@@ -101,267 +53,343 @@ Requirements       (AGENTS.md)        + Tests            Summarized
 ```
 
 ### Stage 1: Intake (Clarify)
-Transform vague ideas or tickets into crystal-clear requirements.
-
-**Workflows:**
+Transform vague ideas into clear requirements
 - `from-ticket.md` - Start from existing ticket
 - `from-idea.md` - Start from vague concept
 - `from-bug.md` - Handle bug reports
 
 ### Stage 2: Planning (Specify)
-Create executable specifications and task plans.
-
-**Workflows:**
-- `create-spec.md` - Full feature specification
-- `create-plan.md` - Break into phases and tasks
-- `estimate.md` - Size and estimate work
+Create executable specifications
+- `create-spec.md` - Full technical specification
+- `create-plan.md` - Break into tasks
+- `create-ticket.md` - Create ticket from spec
 
 ### Stage 3: Execution (Build)
-Implement with validation checkpoints and test coverage.
-
-**Workflows:**
-- `execute-phase.md` - Build one phase at a time
-- `execute-task.md` - Build one task with tests
-- `execute-quick.md` - Quick changes (without full spec)
+Implement with validation
+- `execute-task.md` - Build one task (with tests)
+- `execute-quick.md` - Fast implementation (< 1 hour)
+- `execute-task-without-tests.md` - Opt-out variant
 
 ### Stage 4: Delivery (Ship)
-Create PRs, update docs, and summarize to history.
-
-**Workflows:**
+Create PRs and archive
 - `create-pr.md` - Production-ready pull request
-- `update-docs.md` - Keep documentation current
-- `complete.md` - Summarize and move to history
+- `update-docs.md` - Keep docs current
+- `complete.md` - Summarize to history
 
 ---
 
-## 🤖 Works With Any AI Tool
+## How It Works
+
+### 1. Work-in-Progress Tracking
+
+Active work lives in `.makeflow/work/feature-name/`:
+
+```
+.makeflow/work/feature-name/
+├── AGENTS.md           # Entry point for AI agents
+├── spec.md             # Feature specification
+├── plan.md             # Task breakdown
+└── notes.md            # Development notes
+```
+
+**Key Point**: Work folders ARE COMMITTED so cloud AI tools can read them.
+
+### 2. History & Summaries
+
+When complete, work is summarized and moved to `.makeflow/history/YYYY-MM-DD-feature-name/`:
+
+```
+.makeflow/history/2025-12-09-feature-export/
+├── SUMMARY.md          # Concise summary
+├── PR-LINK.md          # Link to merged PR
+└── CHANGES.md          # List of changes
+```
+
+Original work folder is deleted (keeps repo clean).
+
+### 3. AGENTS.md Entry Point
+
+Single file that AI agents read to understand:
+- What's being built and why
+- Current progress
+- Decisions made
+- What needs to happen next
+
+---
+
+## Works with Any AI Tool
 
 ### Codegen
 ```markdown
 @codegen Use .makeflow/workflows/01-intake/from-ticket.md
-Ticket: PROJ-123
+Ticket: ASG-145
 ```
 
 ### Cursor IDE
 ```markdown
-@Cursor Follow .makeflow/workflows/02-planning/create-spec.md
-Feature: [description]
+@Cursor Follow .makeflow/workflows/01-intake/from-ticket.md
+Ticket: ASG-145
 ```
 
 ### Claude Code
 ```markdown
-@Claude Execute .makeflow/workflows/03-execution/execute-task.md
-Task: Phase 1, Task 1
+@Claude Execute .makeflow/workflows/01-intake/from-ticket.md
+Context: Ticket ASG-145
 ```
 
 ### Any AI Tool
-Just copy-paste the workflow content and provide the required context!
+Copy-paste the workflow content and provide your context!
+
+See [MULTI-TOOL.md](.makeflow/docs/MULTI-TOOL.md) for detailed integration guide.
 
 ---
 
-## 📖 Documentation
+## Quick Examples
 
-- **[Complete Guide](docs/GUIDE.md)** - Detailed walkthrough of all workflows
-- **[Multi-Tool Setup](docs/MULTI-TOOL.md)** - Using makeflow with Cursor, Claude, etc.
-- **[Design Decisions](docs/DECISIONS.md)** - Why we made certain choices
-- **[FAQ](docs/FAQ.md)** - Frequently asked questions
-- **[Examples](docs/EXAMPLES.md)** - Real-world workflow examples
-
----
-
-## 🎓 Key Features
-
-### 📝 Work-in-Progress Tracking
-Active work lives in `.makeflow/work/feature-name/` with:
-- `AGENTS.md` - Entry point and progress tracking
-- Specs, plans, notes, decisions
-- All context for AI tools to reference
-
-### 📚 History & Summaries
-Completed work moves to `.makeflow/history/YYYY-MM-DD-feature/`:
-- Concise summary of changes
-- Links to PRs and commits
-- Indexed in `.makeflow/history/INDEX.md`
-- Original work folder is deleted (keeps repo clean)
-
-### 🧪 Tests by Default
-All execution workflows include test coverage by default:
-- Unit tests
-- Integration tests
-- Opt-out with `-without-tests` variants when needed
-
-### ✅ Validation Gates
-4 checkpoints prevent building the wrong thing:
-1. "Can a junior dev understand this?"
-2. "Are acceptance criteria testable?"
-3. "Does implementation match the plan?"
-4. "Is the PR ready to ship?"
-
-### 🎯 Smart Defaults
-Reduce decisions, increase velocity:
-- Recommended workflows based on context
-- Smart prompts with examples
-- Clear next steps at every stage
-
----
-
-## 🚀 Quick Examples
-
-### Example 1: Feature from Ticket
-```markdown
-# 1. Intake
-@ai Use .makeflow/workflows/01-intake/from-ticket.md
-Ticket: PROJ-145
-
-# AI validates ticket, creates .makeflow/work/feature-export/
-
-# 2. Planning
-@ai Use .makeflow/workflows/02-planning/create-plan.md
-Feature: From ticket PROJ-145
-
-# AI creates specification and task plan in work folder
-
-# 3. Execution
-@ai Use .makeflow/workflows/03-execution/execute-phase.md
-Phase: 1 (Backend)
-
-# AI implements, tests, updates progress in AGENTS.md
-
-# 4. Delivery
-@ai Use .makeflow/workflows/04-delivery/complete.md
-Feature: feature-export
-
-# AI creates PR, summarizes to history/, deletes work/
-```
-
-### Example 2: Quick Bug Fix
+### Simple Bug Fix (30 minutes)
 ```markdown
 @ai Use .makeflow/workflows/01-intake/from-bug.md
+Bug: Excel export fails with special characters
 
-Bug: Export fails with special characters
-Reproduction: [steps]
-
-# Then:
+# AI investigates and fixes
 @ai Use .makeflow/workflows/03-execution/execute-quick.md
-Fix: Sanitize special characters in export filename
+
+# Create PR and complete
+@ai Use .makeflow/workflows/04-delivery/create-pr.md
+@ai Use .makeflow/workflows/04-delivery/complete.md
+```
+
+### Medium Feature (4-8 hours)
+```markdown
+@ai Use .makeflow/workflows/01-intake/from-ticket.md
+Ticket: ASG-145
+
+# Create plan
+@ai Use .makeflow/workflows/02-planning/create-plan.md
+
+# Execute tasks
+@ai Use .makeflow/workflows/03-execution/execute-task.md
+Task: Task 1.1
+
+# [Repeat for each task]
+
+# Deliver
+@ai Use .makeflow/workflows/04-delivery/create-pr.md
+@ai Use .makeflow/workflows/04-delivery/complete.md
+```
+
+### Complex Feature (1-5 days)
+```markdown
+@ai Use .makeflow/workflows/01-intake/from-idea.md
+Feature Idea: Bulk resource assignment
+
+# Create detailed spec
+@ai Use .makeflow/workflows/02-planning/create-spec.md
+
+# Break into plan
+@ai Use .makeflow/workflows/02-planning/create-plan.md
+
+# Execute in phases
+[Build iteratively]
+
+# Update docs and deliver
+@ai Use .makeflow/workflows/04-delivery/update-docs.md
+@ai Use .makeflow/workflows/04-delivery/create-pr.md
+@ai Use .makeflow/workflows/04-delivery/complete.md
 ```
 
 ---
 
-## 🏗️ Project Structure
+## Why makeflow?
 
-### In Your Project
+### The Problem
+
+AI-assisted development often leads to:
+- ❌ Building the wrong thing (unclear requirements)
+- ❌ Inconsistent processes (everyone does it differently)
+- ❌ Lost context (AI forgets what you were doing)
+- ❌ Incomplete tracking (what changed and why?)
+- ❌ Tool lock-in (tied to specific AI platform)
+
+### The Solution
+
+makeflow provides:
+- ✅ **Clarity First**: Spec before code prevents wasted work
+- ✅ **Consistent Process**: Same workflow for whole team
+- ✅ **Persistent Context**: AGENTS.md keeps AI on track
+- ✅ **Complete History**: Every change documented
+- ✅ **Tool Freedom**: Works with any AI platform
+
+---
+
+## Project Structure
+
 ```
 your-project/
-├── .makeflow/              # Copy this to your project
-│   ├── workflows/         # Workflow definitions
-│   ├── work/              # Active work (gitignored)
-│   ├── history/           # Completed summaries (committed)
-│   ├── docs/              # Documentation index
-│   └── templates/         # Prompt templates
-├── .gitignore             # Add .makeflow/work/ to gitignore
-└── [your code]
-```
-
-### .gitignore Setup
-```gitignore
-# makeflow work-in-progress (not committed)
-.makeflow/work/
-
-# makeflow history IS committed (summaries only)
-# (no ignore needed for .makeflow/history/)
-```
-
----
-
-## 📐 Design Philosophy
-
-### Specification-Driven
-Every change starts with a spec. Even small changes get a micro-spec in the work folder.
-
-### AI-Agnostic
-Workflows work with any AI tool. No vendor lock-in. Pure markdown.
-
-### Tracking-First
-From first idea to final ship, everything is tracked. Work folders during dev, summaries after completion.
-
-### Portable & Simple
-Zero dependencies. Copy `.makeflow/` to any project. Works immediately.
-
-### Progressive Complexity
-Small changes use simple workflows. Large features use full 4-stage process.
-
----
-
-## 🤝 Contributing
-
-Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-### Development
-```bash
-# Clone the repo
-git clone https://github.com/ajdurancr/makeflow.git
-cd makeflow
-
-# Make your changes to .makeflow/
-
-# Test with your AI tool
-@ai Use .makeflow/workflows/01-intake/from-idea.md
-Idea: [your test]
-
-# Submit PR
+├── .makeflow/
+│   ├── README.md                      # System overview
+│   ├── workflows/
+│   │   ├── 01-intake/                 # Clarify requirements
+│   │   │   ├── from-ticket.md
+│   │   │   ├── from-idea.md
+│   │   │   └── from-bug.md
+│   │   ├── 02-planning/               # Create specifications
+│   │   │   ├── create-spec.md
+│   │   │   ├── create-plan.md
+│   │   │   └── create-ticket.md
+│   │   ├── 03-execution/              # Build with validation
+│   │   │   ├── execute-task.md
+│   │   │   ├── execute-quick.md
+│   │   │   └── execute-task-without-tests.md
+│   │   └── 04-delivery/               # Ship and document
+│   │       ├── create-pr.md
+│   │       ├── update-docs.md
+│   │       └── complete.md
+│   ├── templates/
+│   │   ├── agents-template.md         # AGENTS.md structure
+│   │   ├── prompt-feature.md          # Feature request templates
+│   │   ├── prompt-bug.md              # Bug report templates
+│   │   └── prompt-refactor.md         # Refactor templates
+│   ├── work/                           # Active work (COMMITTED)
+│   │   └── [feature-name]/
+│   │       └── AGENTS.md
+│   ├── history/                        # Completed work (COMMITTED)
+│   │   ├── INDEX.md
+│   │   └── [YYYY-MM-DD-feature-name]/
+│   └── docs/
+│       ├── GUIDE.md                    # Complete guide
+│       ├── MULTI-TOOL.md               # AI tool integration
+│       ├── DECISIONS.md                # Design decisions & FAQ
+│       └── EXAMPLES.md                 # Real-world examples
+└── [your project files]
 ```
 
 ---
 
-## 📄 License
+## Documentation
 
-MIT License - see [LICENSE](LICENSE) file for details.
+- **[Complete Guide](.makeflow/docs/GUIDE.md)** - Everything you need to know
+- **[Multi-Tool Integration](.makeflow/docs/MULTI-TOOL.md)** - Using different AI tools
+- **[Design Decisions & FAQ](.makeflow/docs/DECISIONS.md)** - Why makeflow is designed this way
+- **[Real-World Examples](.makeflow/docs/EXAMPLES.md)** - See it in action
+- **[Workflows](.makeflow/workflows/)** - Browse all 12 workflows
 
 ---
 
-## 🌟 Why makeflow?
+## Philosophy
 
-**For Junior Developers:**
-- Clear, step-by-step workflows
-- Learn by following structured processes
-- Validation checkpoints prevent mistakes
-- Examples show how to use AI tools effectively
+### 1. Specification-Driven
+Every change starts with a spec (even micro-specs for small changes).  
+**Why?** Prevents building the wrong thing.
 
-**For Senior Developers:**
-- Consistent process across the team
-- Easy to review AI-generated work
-- Trackable decisions and changes
-- Portable to any project
+### 2. AI-Agnostic
+Pure markdown works with any AI tool.  
+**Why?** No vendor lock-in, future-proof.
 
-**For Teams:**
-- Standardized development workflow
-- AI tool flexibility (use what works for you)
+### 3. Tracking-First
+From first idea to final ship, everything is tracked.  
+**Why?** Complete traceability, easy code review.
+
+### 4. Portable & Simple
+Zero dependencies, copy to any project.  
+**Why?** Maximum portability, no setup friction.
+
+---
+
+## Who Uses makeflow?
+
+### Solo Developers
+- Structure for AI-assisted development
+- Clear process to follow
 - Complete change history
-- Onboarding made simple
+
+### Small Teams
+- Consistent workflow across team
+- Flexible tool choices
+- Easy onboarding
+
+### Growing Teams
+- Standardized processes
+- Clear documentation trail
+- Scales with complexity
 
 ---
 
-## 🔗 Links
+## Key Design Decisions
 
-- **Repository**: https://github.com/ajdurancr/makeflow
-- **Issues**: https://github.com/ajdurancr/makeflow/issues
-- **Discussions**: https://github.com/ajdurancr/makeflow/discussions
+### Work Folders Are Committed
+**Why?** Cloud AI tools need to read them to understand current state.
+
+### No Dates in Work Folder Names
+**Why?** `feature-export` stays relevant; dates added in history when complete.
+
+### Tests by Default (Opt-Out)
+**Why?** Quality-first mindset; tests should be the norm, not the exception.
+
+### Work/History Split with Cleanup
+**Why?** Detailed tracking during development, concise summaries forever.
+
+See [DECISIONS.md](.makeflow/docs/DECISIONS.md) for complete rationale.
 
 ---
 
-## 🎉 Get Started
+## Getting Help
 
-```bash
-# 1. Copy to your project
-cp -r .makeflow your-project/
+- **[FAQ](.makeflow/docs/DECISIONS.md#faq)** - Common questions answered
+- **[Examples](.makeflow/docs/EXAMPLES.md)** - Real-world usage
+- **[Issues](https://github.com/ajdurancr/makeflow/issues)** - Report bugs or request features
+- **[Discussions](https://github.com/ajdurancr/makeflow/discussions)** - Ask questions, share experiences
 
-# 2. Add to .gitignore
-echo ".makeflow/work/" >> your-project/.gitignore
+---
 
-# 3. Start building
+## Contributing
+
+makeflow is designed to evolve based on real-world usage.
+
+**Ways to contribute**:
+- 🐛 Report bugs or issues
+- 💡 Suggest workflow improvements
+- 📝 Share your usage examples
+- 🔧 Submit workflow customizations
+- 📚 Improve documentation
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+---
+
+## License
+
+MIT License - See [LICENSE](LICENSE)
+
+**TL;DR**: Use makeflow anywhere, modify it freely, no attribution required.
+
+---
+
+## Acknowledgments
+
+makeflow is built on the principle that **clear requirements + structured processes + AI assistance = better software faster**.
+
+Inspired by countless hours of AI-assisted development and the lessons learned along the way.
+
+---
+
+## Quick Links
+
+- **[📚 Complete Guide](.makeflow/docs/GUIDE.md)** - Start here
+- **[🔧 Workflows](.makeflow/workflows/)** - Browse all workflows
+- **[🤖 Multi-Tool Guide](.makeflow/docs/MULTI-TOOL.md)** - Codegen, Cursor, Claude, etc.
+- **[💡 Examples](.makeflow/docs/EXAMPLES.md)** - See it in action
+- **[❓ FAQ](.makeflow/docs/DECISIONS.md#faq)** - Common questions
+
+---
+
+**Ready to start?** Try your first workflow:
+
+```markdown
 @ai Use .makeflow/workflows/01-intake/from-ticket.md
+
+Ticket: YOUR-TICKET-ID
 ```
 
-**That's it! Happy building with makeflow! 🚀**
+Happy building! 🚀
 
