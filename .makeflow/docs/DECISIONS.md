@@ -236,7 +236,7 @@ A: No! Use what you need:
 A: Absolutely! Edit the workflows to match your team's needs. makeflow is a starting point.
 
 **Q: Do I have to delete work folders after completion?**  
-A: Recommended but not required. The `complete.md` workflow does it automatically to keep repos clean.
+A: **YES - it's mandatory!** The `complete.md` workflow includes explicit deletion requirements with a checklist. Work folders are committed during development for AI access, but MUST be deleted after summarizing to history. This keeps the repository clean and enforces the work/history separation design.
 
 **Q: What if I'm not using AI tools?**  
 A: Workflows still work as documentation! Follow the steps manually. The structure helps even without AI.
@@ -448,4 +448,3 @@ makeflow is designed to evolve based on real-world usage. Your input shapes its 
 ---
 
 **Next**: See [EXAMPLES.md](EXAMPLES.md) for real-world usage examples.
-

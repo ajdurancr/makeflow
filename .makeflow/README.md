@@ -11,7 +11,7 @@ This is the **makeflow** specification-driven development workflow system.
 │   ├── 02-planning/       # Create specifications
 │   ├── 03-execution/      # Build with validation
 │   └── 04-delivery/       # Ship and document
-├── work/                   # Active work-in-progress (gitignored)
+├── work/                   # Active work-in-progress (COMMITTED for AI access)
 │   └── [feature-name]/    # Current feature being built
 │       └── AGENTS.md      # Entry point for AI agents
 ├── history/               # Completed work summaries (committed)
@@ -60,11 +60,12 @@ The AI will:
 
 ## Work vs History
 
-### `.makeflow/work/` (gitignored)
+### `.makeflow/work/` (COMMITTED - but deleted after completion)
 - **Active work in progress**
+- **Committed to repo** so cloud AI tools (Codegen, Claude Code) can read it
 - Detailed tracking during development
 - `AGENTS.md` entry point for AI context
-- Deleted after feature is complete
+- **MUST be deleted after feature is complete** (keeps repo clean)
 
 ### `.makeflow/history/` (committed)
 - **Concise summaries only**
@@ -131,4 +132,3 @@ See the main [README.md](../README.md) for:
 
 - **Issues**: https://github.com/ajdurancr/makeflow/issues
 - **Discussions**: https://github.com/ajdurancr/makeflow/discussions
-
