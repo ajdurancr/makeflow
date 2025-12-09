@@ -1,0 +1,6 @@
+# makeflow work-in-progress (not committed)
+.makeflow/work/
+
+# Keep history folder (summaries are committed)
+!.makeflow/history/
+

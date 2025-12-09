@@ -1,0 +1,134 @@
+# .makeflow/
+
+This is the **makeflow** specification-driven development workflow system.
+
+## Structure
+
+```
+.makeflow/
+├── workflows/              # Workflow definitions for AI tools
+│   ├── 01-intake/         # Clarify requirements
+│   ├── 02-planning/       # Create specifications
+│   ├── 03-execution/      # Build with validation
+│   └── 04-delivery/       # Ship and document
+├── work/                   # Active work-in-progress (gitignored)
+│   └── [feature-name]/    # Current feature being built
+│       └── AGENTS.md      # Entry point for AI agents
+├── history/               # Completed work summaries (committed)
+│   ├── INDEX.md           # Index of all completed work
+│   └── [YYYY-MM-DD-feature]/  # Summarized completed work
+├── docs/                  # Documentation organization
+└── templates/             # Prompt templates for AI tools
+```
+
+## Quick Start
+
+### 1. Start a New Feature
+
+```markdown
+@ai Use .makeflow/workflows/01-intake/from-ticket.md
+Ticket: PROJ-123
+```
+
+### 2. The AI Will:
+- Validate the ticket
+- Create `.makeflow/work/feature-name/`
+- Create `AGENTS.md` as the entry point
+- Guide you through the workflow
+
+### 3. Track Progress
+
+All work is tracked in `.makeflow/work/feature-name/AGENTS.md`:
+- Current phase
+- Completed tasks
+- Next steps
+- Decisions made
+
+### 4. Complete the Feature
+
+```markdown
+@ai Use .makeflow/workflows/04-delivery/complete.md
+Feature: feature-name
+```
+
+The AI will:
+- Create a PR
+- Summarize all work
+- Move summary to `.makeflow/history/`
+- Delete the work folder
+- Update history INDEX
+
+## Work vs History
+
+### `.makeflow/work/` (gitignored)
+- **Active work in progress**
+- Detailed tracking during development
+- `AGENTS.md` entry point for AI context
+- Deleted after feature is complete
+
+### `.makeflow/history/` (committed)
+- **Concise summaries only**
+- Permanent record of changes
+- Links to PRs and commits
+- Indexed for easy reference
+
+## Why This Structure?
+
+### No Dates in Work Folders
+Work folders use feature names only (not dates) because:
+- ❌ Dated folders get stale ("started 2 weeks ago, still working on it")
+- ✅ Feature names stay relevant
+- ✅ One feature per branch enforced
+- ✅ Dates added in history when complete
+
+### Separate Work & History
+- **Work folder**: Detailed, evolving, temporary
+- **History folder**: Concise, permanent, indexed
+- Keeps repo clean while maintaining full traceability
+
+### AGENTS.md as Entry Point
+- Single file AI agents can read for full context
+- Always up-to-date with current state
+- Clear structure for tracking progress
+- Easy for humans to review
+
+## Using with Different AI Tools
+
+### Codegen
+```markdown
+@codegen Use .makeflow/workflows/01-intake/from-ticket.md
+Ticket: PROJ-123
+```
+
+### Cursor
+```markdown
+@Cursor Follow the workflow in .makeflow/workflows/01-intake/from-ticket.md
+
+Ticket: PROJ-123
+```
+
+### Claude Code
+```markdown
+@Claude Execute .makeflow/workflows/01-intake/from-ticket.md
+
+Context:
+- Ticket: PROJ-123
+- Project: [project name]
+```
+
+### Any AI Tool
+Copy-paste the workflow content and provide context!
+
+## Documentation
+
+See the main [README.md](../README.md) for:
+- Complete guide
+- Design decisions
+- FAQ
+- Examples
+
+## Support
+
+- **Issues**: https://github.com/ajdurancr/makeflow/issues
+- **Discussions**: https://github.com/ajdurancr/makeflow/discussions
+
