@@ -18,6 +18,14 @@
 
 ---
 
+## 📚 Project Documentation
+
+> **AI Agent Note**: If `.makeflow/project/index.md` exists, review it before working on this feature.
+> It contains pointers to relevant documentation including architecture, API references, domain knowledge,
+> and coding standards that will help you understand the project context and build the feature correctly.
+
+---
+
 ## 🎯 Requirements
 
 ### From Ticket/Request
@@ -151,4 +159,3 @@
 - ✅ Complete
 - ⏸️ Blocked
 - ❌ Cancelled
-

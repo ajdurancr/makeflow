@@ -26,6 +26,13 @@
 
 ## Instructions for AI Agent
 
+### Step 0: Review Project Documentation (if available)
+
+**Before investigating**, check if `.makeflow/project/index.md` exists:
+- **If it exists**: Review it to understand the architecture and components related to the bug
+- **Purpose**: This helps you understand the system design, identify which components might be involved, and find relevant technical documentation
+- **What to look for**: Architecture diagrams, component documentation, known issues or gotchas, debugging guides
+
 ### Step 1: Capture Bug Details
 
 **Ask the user for**:
@@ -391,4 +398,3 @@ Keep updating `.makeflow/work/bug-[slug]/AGENTS.md` with findings
 ---
 
 **End of Workflow**
-

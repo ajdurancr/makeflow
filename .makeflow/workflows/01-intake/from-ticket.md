@@ -27,6 +27,13 @@
 
 When a user invokes this workflow, follow these steps:
 
+### Step 0: Review Project Documentation (if available)
+
+**Before starting**, check if `.makeflow/project/index.md` exists:
+- **If it exists**: Review it to understand the project's architecture, conventions, and relevant documentation
+- **Purpose**: This helps you better understand the context when validating the ticket and asking clarifying questions
+- **What to look for**: Architecture patterns, API references, domain knowledge that might relate to this ticket
+
 ### Step 1: Read the Ticket
 
 **Ask the user for**:
@@ -433,4 +440,3 @@ Before completing this workflow, verify:
 ---
 
 **End of Workflow**
-

@@ -26,6 +26,13 @@
 
 ## Instructions for AI Agent
 
+
+### Step 0: Review Project Documentation Index (if available)
+
+**Before identifying documentation needs**, check if `.makeflow/project/index.md` exists:
+- **If it exists**: Review it to understand what documentation exists in this project and where it lives
+- **Purpose**: This helps you identify which documentation files need to be updated based on the project's documentation structure
+- **What to look for**: Documentation locations, existing guides, API reference locations, update procedures
 ### Step 1: Identify Documentation Needs
 
 **Determine what needs updating**:

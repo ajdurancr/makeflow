@@ -28,6 +28,13 @@
 
 When a user invokes this workflow, follow these steps:
 
+### Step 0: Review Project Documentation (if available)
+
+**Before starting**, check if `.makeflow/project/index.md` exists:
+- **If it exists**: Review it to understand the project's architecture, domain, and existing features
+- **Purpose**: This helps you ask better clarifying questions and validate feasibility within the project's context
+- **What to look for**: Similar features, architectural constraints, domain concepts that relate to the idea
+
 ### Step 1: Capture the Initial Idea
 
 **Ask the user for**:
@@ -519,4 +526,3 @@ Before completing this workflow:
 ---
 
 **End of Workflow**
-

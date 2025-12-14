@@ -103,6 +103,22 @@ Work folders use feature names only (not dates) because:
 - Clear structure for tracking progress
 - Easy for humans to review
 
+## 📚 Documentation Integration
+
+This project's documentation is indexed for AI agents at:
+- **`.makeflow/project/index.md`** - Entry point for all project documentation
+
+**Purpose**: AI agents check this index to understand where to find:
+- Technical architecture documentation
+- API references and specifications
+- Domain knowledge and business rules
+- Coding standards and conventions
+- Deployment and configuration guides
+
+**For AI Agents**: If `.makeflow/project/index.md` exists, review it before starting work to understand the project context and locate relevant documentation for the feature you're building.
+
+**Setup**: Use `.makeflow/workflows/00-setup/hook-docs.md` or `bootstrap-docs.md` to configure documentation integration.
+
 ## Using with Different AI Tools
 
 ### Codegen
