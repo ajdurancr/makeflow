@@ -7,6 +7,7 @@ This is the **makeflow** specification-driven development workflow system.
 ```
 .makeflow/
 ├── workflows/              # Workflow definitions for AI tools
+│   ├── 00-setup/          # Setup and configuration
 │   ├── 01-intake/         # Clarify requirements
 │   ├── 02-planning/       # Create specifications
 │   ├── 03-execution/      # Build with validation
@@ -17,8 +18,17 @@ This is the **makeflow** specification-driven development workflow system.
 ├── history/               # Completed work summaries (committed)
 │   ├── INDEX.md           # Index of all completed work
 │   └── [YYYY-MM-DD-feature]/  # Summarized completed work
-├── docs/                  # Documentation organization
+├── framework/             # Makeflow framework documentation
+│   ├── DECISIONS.md       # Framework design decisions
+│   ├── EXAMPLES.md        # Usage examples
+│   ├── GUIDE.md           # Complete guide
+│   └── MULTI-TOOL.md      # Multi-tool integration guide
+├── project/               # Host project documentation entry point
+│   └── index.md           # AI agent documentation index
 └── templates/             # Prompt templates for AI tools
+    ├── agents-template.md
+    ├── prompt-*.md
+    └── project-docs/      # Documentation templates for host projects
 ```
 
 ## Quick Start

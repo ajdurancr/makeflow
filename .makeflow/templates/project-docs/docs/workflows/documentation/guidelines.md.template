@@ -1,0 +1,64 @@
+# Documentation Guidelines
+
+## When to Add Documentation
+
+- **New features**: Add specification in `specs/`
+- **Architectural decisions**: Create ADR in `decisions/`
+- **Reusable patterns**: Document in `patterns/`
+- **Process changes**: Update or add to `workflows/`
+
+## Where to Add Documentation
+
+| Documentation Type | Location | Format |
+|-------------------|----------|--------|
+| Feature specs | `specs/[feature-name].md` | Specification template |
+| Patterns | `patterns/[pattern-name].md` | Pattern template |
+| Workflows | `workflows/[workflow-name].md` | Workflow template |
+| Decisions | `decisions/NNNN-[title].md` | ADR template |
+
+## How to Structure Documents
+
+### General Guidelines
+
+1. **Start with overview**: What is this about?
+2. **Explain context**: Why does this exist?
+3. **Provide details**: How does it work?
+4. **Link liberally**: Connect to related documentation
+5. **Use examples**: Concrete examples clarify concepts
+6. **Keep it updated**: Add "Last Updated" dates
+
+### Document Length
+
+- **Target**: Most docs should be 200-500 lines
+- **Maximum**: ~2000 lines before considering splitting
+- **Minimum**: No minimum - concise is good!
+
+## Templates
+
+Templates are available at: `.makeflow/templates/project-docs/`
+
+Use the makeflow workflows to automatically apply templates:
+```
+@ai Use .makeflow/workflows/00-setup/hook-docs.md
+@ai Use .makeflow/workflows/00-setup/bootstrap-docs.md
+```
+
+## Progressive Documentation Approach
+
+Documentation grows organically:
+- Start with this README as the hub
+- Add sections as they become necessary
+- Extract to separate files when sections grow large
+- Create categories when you have 3+ similar documents
+
+## Getting Help
+
+If unsure how to document something:
+1. Check existing documentation for similar content
+2. Look at template examples in `.makeflow/templates/project-docs/`
+3. Ask the team for guidance
+
+---
+
+**Last Updated**: {{CURRENT_DATE}}  
+**Project**: {{PROJECT_NAME}}
