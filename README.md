@@ -83,6 +83,8 @@ Create executable specifications
 ### Stage 3: Execution (Build)
 Implement with validation
 - `execute-task.md` - Build one task (with tests)
+- `execute-phase.md` - Complete one phase (2-4 hours)
+- `execute-all-phases.md` - Complete feature (4-8 hours)
 - `execute-quick.md` - Fast implementation (< 1 hour)
 - `execute-task-without-tests.md` - Opt-out variant
 
@@ -183,11 +185,16 @@ Ticket: ASG-145
 # Create plan
 @ai Use .makeflow/workflows/02-planning/create-plan.md
 
-# Execute tasks
+# Option 1: Execute entire feature at once
+@ai Use .makeflow/workflows/03-execution/execute-all-phases.md
+
+# Option 2: Execute one phase at a time
+@ai Use .makeflow/workflows/03-execution/execute-phase.md
+Phase: 1
+
+# Option 3: Execute individual tasks
 @ai Use .makeflow/workflows/03-execution/execute-task.md
 Task: Task 1.1
-
-# [Repeat for each task]
 
 # Deliver
 @ai Use .makeflow/workflows/04-delivery/create-pr.md
@@ -205,8 +212,13 @@ Feature Idea: Bulk resource assignment
 # Break into plan
 @ai Use .makeflow/workflows/02-planning/create-plan.md
 
-# Execute in phases
-[Build iteratively]
+# Option 1: Execute all phases at once
+@ai Use .makeflow/workflows/03-execution/execute-all-phases.md
+
+# Option 2: Execute phase by phase
+@ai Use .makeflow/workflows/03-execution/execute-phase.md
+Phase: 1
+# [Continue with remaining phases]
 
 # Update docs and deliver
 @ai Use .makeflow/workflows/04-delivery/update-docs.md
@@ -260,6 +272,8 @@ your-project/
 │   │   │   └── create-ticket.md
 │   │   ├── 03-execution/              # Build with validation
 │   │   │   ├── execute-task.md
+│   │   │   ├── execute-phase.md
+│   │   │   ├── execute-all-phases.md
 │   │   │   ├── execute-quick.md
 │   │   │   └── execute-task-without-tests.md
 │   │   └── 04-delivery/               # Ship and document

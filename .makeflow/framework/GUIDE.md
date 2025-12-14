@@ -288,6 +288,16 @@ from-bug.md → execute-quick.md → create-pr.md → complete.md
 from-ticket.md → create-plan.md → execute-task.md × 3 → create-pr.md → complete.md
 ```
 
+**Medium feature (one phase)**:
+```
+from-ticket.md → create-plan.md → execute-phase.md → create-pr.md → complete.md
+```
+
+**Large feature (multiple phases)**:
+```
+from-ticket.md → create-plan.md → execute-all-phases.md → create-pr.md → update-docs.md → complete.md
+```
+
 **Complex feature**:
 ```
 from-idea.md → create-spec.md → create-plan.md → execute-task.md × N → create-pr.md → update-docs.md → complete.md
@@ -377,4 +387,3 @@ mv .makeflow/history/2024-* .makeflow/history/archive/2024/
 ---
 
 **Questions?** See [FAQ](DECISIONS.md#faq) or open an issue!
-

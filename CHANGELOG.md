@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Changes that have been added but not yet released
 
+## [1.1.0] - 2025-12-14
+
+### Added
+- Missing execution workflow files (`execute-all-phases.md`, `execute-phase.md`)
+- Enhanced framework documentation with references to new execution workflows
+- Updated README with comprehensive workflow documentation
+
+### Fixed
+- Completed execution workflow documentation coverage
+
 ## [1.0.0] - 2025-12-14
 
 ### Added
@@ -26,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Workflows
 - **01-intake**: from-ticket, from-idea, from-bug
 - **02-planning**: create-spec, create-plan, create-ticket
-- **03-execution**: execute-task, execute-quick, execute-task-without-tests
+- **03-execution**: execute-task, execute-phase, execute-all-phases, execute-quick, execute-task-without-tests
 - **04-delivery**: create-pr, update-docs, complete
 - **00-setup**: hook-docs, bootstrap-docs, update-makeflow
 
@@ -35,6 +45,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.makeflow/project/` - Host project documentation entry point
 - `.makeflow/templates/project-docs/` - Documentation templates for host projects
 
-[Unreleased]: https://github.com/ajdurancr/makeflow/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/ajdurancr/makeflow/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/ajdurancr/makeflow/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/ajdurancr/makeflow/releases/tag/v1.0.0
-
