@@ -7,6 +7,7 @@ This is the **makeflow** specification-driven development workflow system.
 ```
 .makeflow/
 ├── workflows/              # Workflow definitions for AI tools
+│   ├── 00-setup/          # Setup and configuration
 │   ├── 01-intake/         # Clarify requirements
 │   ├── 02-planning/       # Create specifications
 │   ├── 03-execution/      # Build with validation
@@ -17,8 +18,17 @@ This is the **makeflow** specification-driven development workflow system.
 ├── history/               # Completed work summaries (committed)
 │   ├── INDEX.md           # Index of all completed work
 │   └── [YYYY-MM-DD-feature]/  # Summarized completed work
-├── docs/                  # Documentation organization
+├── framework/             # Makeflow framework documentation
+│   ├── DECISIONS.md       # Framework design decisions
+│   ├── EXAMPLES.md        # Usage examples
+│   ├── GUIDE.md           # Complete guide
+│   └── MULTI-TOOL.md      # Multi-tool integration guide
+├── project/               # Host project documentation entry point
+│   └── index.md           # AI agent documentation index
 └── templates/             # Prompt templates for AI tools
+    ├── agents-template.md
+    ├── prompt-*.md
+    └── project-docs/      # Documentation templates for host projects
 ```
 
 ## Quick Start
@@ -92,6 +102,22 @@ Work folders use feature names only (not dates) because:
 - Always up-to-date with current state
 - Clear structure for tracking progress
 - Easy for humans to review
+
+## 📚 Documentation Integration
+
+This project's documentation is indexed for AI agents at:
+- **`.makeflow/project/index.md`** - Entry point for all project documentation
+
+**Purpose**: AI agents check this index to understand where to find:
+- Technical architecture documentation
+- API references and specifications
+- Domain knowledge and business rules
+- Coding standards and conventions
+- Deployment and configuration guides
+
+**For AI Agents**: If `.makeflow/project/index.md` exists, review it before starting work to understand the project context and locate relevant documentation for the feature you're building.
+
+**Setup**: Use `.makeflow/workflows/00-setup/hook-docs.md` or `bootstrap-docs.md` to configure documentation integration.
 
 ## Using with Different AI Tools
 

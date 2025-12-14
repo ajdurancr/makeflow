@@ -1,0 +1,84 @@
+# Project Documentation Index
+
+> **Entry Point**: This file helps AI agents understand where project documentation lives.
+
+## 🏠 Main Documentation Hub
+
+**Location**: `../../docs/README.md`
+
+The main documentation hub contains:
+- {{PROJECT_NAME}} overview and mission
+- Technology stack information
+- Quick start guide
+- Core concepts and terminology
+- Navigation to all documentation sections
+
+## 📚 Documentation Structure
+
+### Patterns (`../../docs/patterns/`)
+Development patterns and best practices for {{PROJECT_NAME}}:
+- **[Pattern Name]** → [Brief description of what this pattern does]
+
+*Add links to patterns as they are created*
+
+### Specifications (`../../docs/specs/`)
+Technical specifications for features and components:
+- **[Feature Name]** → [Brief description of the feature]
+
+*Add links to specifications as features are specified*
+
+### Workflows (`../../docs/workflows/`)
+Team processes and development workflows:
+- **Documentation Guidelines** → How to add and organize documentation
+
+*Add links to workflows as processes are established*
+
+### Decisions (`../../docs/decisions/`)
+Architecture Decision Records (ADRs) documenting significant technical choices:
+- **[NNNN-Decision-Title]** → [Brief description of the decision]
+
+*Add links to ADRs as architectural decisions are made*
+
+## 🤖 AI Agent Quick Reference
+
+### For Implementation Tasks:
+Include: `docs/README.md` + `docs/patterns/**` + relevant specs
+
+**Example**: When implementing a new API endpoint, include API patterns and related specs.
+
+### For Understanding Features:
+Include: `docs/README.md` + `docs/specs/**` + relevant decisions
+
+**Example**: When understanding how a feature works, include its spec and related architecture decisions.
+
+### For Process Questions:
+Include: `docs/README.md` + `docs/workflows/**`
+
+**Example**: When asking about development workflow, include workflow documentation.
+
+### For Complete Context:
+Include: `docs/**/*` (everything)
+
+**Example**: When starting work on a new area of the codebase or onboarding.
+
+## 📝 Maintenance Notes
+
+**Last Updated**: {{CURRENT_DATE}}
+
+**Update Triggers**: 
+- New top-level documentation sections added
+- Major reorganization of `docs/` structure
+- New documentation categories created
+
+**Low Maintenance Design**: This index describes WHERE docs live, not their detailed contents. It rarely needs updates unless the documentation structure itself changes.
+
+**Progressive Growth**: Documentation starts minimal and grows organically as:
+- Patterns are identified and documented
+- Features are specified
+- Architectural decisions are made
+- Processes are established
+
+---
+
+**Note**: This file was generated from `.makeflow/templates/project-docs/index.md.template`
+

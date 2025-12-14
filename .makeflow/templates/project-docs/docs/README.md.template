@@ -1,0 +1,139 @@
+# {{PROJECT_NAME}} Documentation
+
+> {{PROJECT_DESCRIPTION}}
+
+## 🎯 What is {{PROJECT_NAME}}?
+
+{{PROJECT_NAME}} is [detailed description of what the project does, its purpose, and key value proposition].
+
+[Add 2-3 paragraphs explaining the project's mission, target users, and core capabilities]
+
+## 🚀 Quick Links
+
+- [Getting Started](#getting-started)
+- [Core Concepts](#core-concepts)
+- [Patterns](./patterns/) - Development patterns
+- [Specifications](./specs/) - Feature specifications
+- [Workflows](./workflows/) - Team processes
+- [Decisions](./decisions/) - Architecture decisions
+
+## 💡 Core Concepts
+
+### [Concept 1]
+[Brief explanation of a key concept or domain entity]
+
+### [Concept 2]
+[Brief explanation of another key concept]
+
+### [Concept 3]
+[Brief explanation of a third key concept]
+
+*Add 2-4 core concepts that are central to understanding your project*
+
+## 🏗️ Technology Stack
+
+**{{PRIMARY_LANGUAGE}}**:
+- {{FRAMEWORK}}
+- [Additional libraries/tools]
+
+**Development Tools**:
+- [Build tool]
+- [Linter/formatter]
+- [Testing framework]
+
+## 📚 Documentation Sections
+
+### 🎨 Patterns
+
+Development patterns and best practices:
+
+*Patterns will be added as they emerge during development*
+
+### 📋 Specifications
+
+Technical specifications for features and components:
+
+*Specifications will be added as features are planned*
+
+### ⚙️ Workflows
+
+Team workflows and processes:
+- [Documentation Guidelines](./workflows/documentation/guidelines.md) - How to add documentation
+
+*Additional workflows will be added as processes are established*
+
+### 🗳️ Architecture Decisions
+
+Record of significant architectural decisions:
+
+*ADRs will be added as architectural decisions are made*
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Prerequisite 1]
+- [Prerequisite 2]
+- [Prerequisite 3]
+
+### Installation
+
+```bash
+# Clone the repository
+git clone {{REPO_URL}}
+cd {{REPO_NAME}}
+
+# Install dependencies
+[Installation command based on your stack]
+```
+
+### Running the Project
+
+```bash
+# Development mode
+[Development command]
+
+# Build
+[Build command]
+
+# Test
+[Test command]
+```
+
+## 🤝 Contributing to Documentation
+
+We follow a **Progressive/README-First** approach:
+- Documentation starts simple and grows organically
+- New content typically begins in this README
+- Extract to separate files when sections exceed ~200 lines
+- Create folders only when you have 3+ files of the same type
+
+**How to add documentation**:
+See [Documentation Guidelines](./workflows/documentation/guidelines.md)
+
+## 📞 Getting Help
+
+**Questions about features?** Check the specifications in `specs/`
+
+**Questions about implementation?** Review patterns in `patterns/`
+
+**Questions about processes?** See workflows in `workflows/`
+
+**Still have questions?** [Create an issue or ask in team chat]
+
+---
+
+## 📝 Documentation Status
+
+**Last Updated**: {{CURRENT_DATE}}  
+**Status**: Initial documentation - ready for organic growth
+
+This documentation follows a progressive growth model:
+- Starts with this README as the central hub
+- Grows organically as the project develops
+- Extracts to specialized documents as sections expand
+
+---
+
+**Repository**: {{REPO_URL}}  
+**Maintained by**: {{REPO_OWNER}}

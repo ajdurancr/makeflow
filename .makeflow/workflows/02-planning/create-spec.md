@@ -26,13 +26,18 @@
 
 ## Instructions for AI Agent
 
-### Step 1: Review Existing Context
+### Step 1: Gather Context
 
-Read `.makeflow/work/[feature-name]/AGENTS.md` to understand:
+**First**, read `.makeflow/work/[feature-name]/AGENTS.md` to understand:
 - Requirements
 - Acceptance criteria
 - Technical constraints
 - Any decisions already made
+
+**Then**, check if `.makeflow/project/index.md` exists:
+- **If it exists**: Review it to find relevant technical documentation for this feature
+- **Purpose**: Understand architectural patterns, existing components to reuse, API design standards, and technical constraints
+- **What to look for**: Architecture docs, API references, similar features, design patterns used in the project
 
 ### Step 2: Define Technical Approach
 
@@ -387,4 +392,3 @@ For a "Resource Bulk Assignment" feature:
 ---
 
 **End of Workflow**
-

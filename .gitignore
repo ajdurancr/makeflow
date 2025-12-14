@@ -1,5 +1,10 @@
 # makeflow - No gitignore needed!
 # Work folders ARE committed for cloud AI tools to access context
 
-# Add your project-specific ignores below
+# Makeflow update cache (temporary directory for update workflow)
+.makeflow/.update-cache/
 
+# Makeflow backups (created during updates)
+.makeflow-backups/
+
+# Add your project-specific ignores below
