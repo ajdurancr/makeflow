@@ -24,6 +24,13 @@ Ticket: YOUR-TICKET-ID
 
 **That's it!** The AI will guide you through the entire process.
 
+**Optional**: Connect your project documentation:
+```markdown
+@ai Use .makeflow/workflows/00-setup/hook-docs.md
+# Or bootstrap new docs:
+@ai Use .makeflow/workflows/00-setup/bootstrap-docs.md
+```
+
 ---
 
 ## What is makeflow?
@@ -38,10 +45,19 @@ Ticket: YOUR-TICKET-ID
 - **🧹 Clean Repos** - Work folders → concise history summaries
 - **📦 Zero Dependencies** - Pure markdown, copy to any project
 - **🔄 Flexible Workflows** - Use what you need, skip what you don't
+- **📚 Documentation Integration** - Hook project docs into workflows
+- **🔖 Version Tracking** - Smart updates with automatic backups
 
 ---
 
 ## The 4-Stage Workflow
+
+**Setup Stage** (run once per project):
+- `hook-docs.md` - Connect to existing documentation
+- `bootstrap-docs.md` - Create docs from scratch
+- `update-makeflow.md` - Update makeflow framework
+
+**Main Development Workflow**:
 
 ```
 ┌──────────┐      ┌──────────┐      ┌──────────┐      ┌──────────┐
@@ -140,7 +156,7 @@ Context: Ticket ASG-145
 ### Any AI Tool
 Copy-paste the workflow content and provide your context!
 
-See [MULTI-TOOL.md](.makeflow/docs/MULTI-TOOL.md) for detailed integration guide.
+See [MULTI-TOOL.md](.makeflow/framework/MULTI-TOOL.md) for detailed integration guide.
 
 ---
 
@@ -228,7 +244,12 @@ makeflow provides:
 your-project/
 ├── .makeflow/
 │   ├── README.md                      # System overview
+│   ├── VERSION                        # Makeflow version (for updates)
 │   ├── workflows/
+│   │   ├── 00-setup/                  # Setup & configuration
+│   │   │   ├── hook-docs.md
+│   │   │   ├── bootstrap-docs.md
+│   │   │   └── update-makeflow.md
 │   │   ├── 01-intake/                 # Clarify requirements
 │   │   │   ├── from-ticket.md
 │   │   │   ├── from-idea.md
@@ -256,11 +277,13 @@ your-project/
 │   ├── history/                        # Completed work (COMMITTED)
 │   │   ├── INDEX.md
 │   │   └── [YYYY-MM-DD-feature-name]/
-│   └── docs/
-│       ├── GUIDE.md                    # Complete guide
-│       ├── MULTI-TOOL.md               # AI tool integration
-│       ├── DECISIONS.md                # Design decisions & FAQ
-│       └── EXAMPLES.md                 # Real-world examples
+│   ├── framework/                      # Makeflow framework docs
+│   │   ├── GUIDE.md                    # Complete guide
+│   │   ├── MULTI-TOOL.md               # AI tool integration
+│   │   ├── DECISIONS.md                # Design decisions & FAQ
+│   │   └── EXAMPLES.md                 # Real-world examples
+│   └── project/                        # Host project docs integration
+│       └── index.md                    # AI agent documentation index
 └── [your project files]
 ```
 
@@ -268,11 +291,11 @@ your-project/
 
 ## Documentation
 
-- **[Complete Guide](.makeflow/docs/GUIDE.md)** - Everything you need to know
-- **[Multi-Tool Integration](.makeflow/docs/MULTI-TOOL.md)** - Using different AI tools
-- **[Design Decisions & FAQ](.makeflow/docs/DECISIONS.md)** - Why makeflow is designed this way
-- **[Real-World Examples](.makeflow/docs/EXAMPLES.md)** - See it in action
-- **[Workflows](.makeflow/workflows/)** - Browse all 12 workflows
+- **[Complete Guide](.makeflow/framework/GUIDE.md)** - Everything you need to know
+- **[Multi-Tool Integration](.makeflow/framework/MULTI-TOOL.md)** - Using different AI tools
+- **[Design Decisions & FAQ](.makeflow/framework/DECISIONS.md)** - Why makeflow is designed this way
+- **[Real-World Examples](.makeflow/framework/EXAMPLES.md)** - See it in action
+- **[Workflows](.makeflow/workflows/)** - Browse all workflows
 
 ---
 
@@ -329,14 +352,38 @@ Zero dependencies, copy to any project.
 ### Work/History Split with Cleanup
 **Why?** Detailed tracking during development, concise summaries forever.
 
-See [DECISIONS.md](.makeflow/docs/DECISIONS.md) for complete rationale.
+See [DECISIONS.md](.makeflow/framework/DECISIONS.md) for complete rationale.
+
+---
+
+## Keeping makeflow Updated
+
+makeflow uses semantic versioning and includes a smart update workflow:
+
+```markdown
+@ai Use .makeflow/workflows/00-setup/update-makeflow.md
+```
+
+**What it does**:
+- Checks for new versions from upstream
+- Shows CHANGELOG between your version and latest
+- Creates automatic backups before updating
+- Preserves your project-specific files
+- Validates the update and offers easy rollback
+
+**When to update**:
+- Monthly or quarterly for maintenance
+- When you hear about new features
+- Before starting major new work
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 ---
 
 ## Getting Help
 
-- **[FAQ](.makeflow/docs/DECISIONS.md#faq)** - Common questions answered
-- **[Examples](.makeflow/docs/EXAMPLES.md)** - Real-world usage
+- **[FAQ](.makeflow/framework/DECISIONS.md#faq)** - Common questions answered
+- **[Examples](.makeflow/framework/EXAMPLES.md)** - Real-world usage
 - **[Issues](https://github.com/ajdurancr/makeflow/issues)** - Report bugs or request features
 - **[Discussions](https://github.com/ajdurancr/makeflow/discussions)** - Ask questions, share experiences
 
@@ -375,11 +422,11 @@ Inspired by countless hours of AI-assisted development and the lessons learned a
 
 ## Quick Links
 
-- **[📚 Complete Guide](.makeflow/docs/GUIDE.md)** - Start here
+- **[📚 Complete Guide](.makeflow/framework/GUIDE.md)** - Start here
 - **[🔧 Workflows](.makeflow/workflows/)** - Browse all workflows
-- **[🤖 Multi-Tool Guide](.makeflow/docs/MULTI-TOOL.md)** - Codegen, Cursor, Claude, etc.
-- **[💡 Examples](.makeflow/docs/EXAMPLES.md)** - See it in action
-- **[❓ FAQ](.makeflow/docs/DECISIONS.md#faq)** - Common questions
+- **[🤖 Multi-Tool Guide](.makeflow/framework/MULTI-TOOL.md)** - Codegen, Cursor, Claude, etc.
+- **[💡 Examples](.makeflow/framework/EXAMPLES.md)** - See it in action
+- **[❓ FAQ](.makeflow/framework/DECISIONS.md#faq)** - Common questions
 
 ---
 
@@ -392,4 +439,3 @@ Ticket: YOUR-TICKET-ID
 ```
 
 Happy building! 🚀
-
