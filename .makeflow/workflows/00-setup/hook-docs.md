@@ -72,6 +72,81 @@ Categories detected: patterns, specs, workflows, decisions
 
 ---
 
+### Step 3.5: Deep Scan for Documentation Files
+
+**Purpose**: Ensure no documentation files are missed during index creation.
+
+**Scan all markdown files** in the documentation area:
+
+```bash
+# Find all .md files in the documentation root
+find [DOCS_ROOT] -type f -name "*.md" ! -path "*/node_modules/*" ! -path "*/.git/*" ! -path "*/dist/*" | sort
+```
+
+**Categorize each file** found:
+
+1. **Determine category** - Which section does it belong to?
+   - Patterns (development patterns, best practices)
+   - Specifications (feature specs, technical specs)
+   - Workflows (processes, how-tos, guides)
+   - Decisions (ADRs, architectural choices)
+   - Other (guides, tutorials, reference, etc.)
+
+2. **Extract purpose** - Get brief description from file:
+   - Check first heading or front matter
+   - Read first paragraph
+   - Infer from filename if needed
+
+3. **Check existing references** - Is it already indexed?
+   - Search in any existing README or index files
+   - Note if missing from primary documentation hub
+
+**Create comprehensive file inventory**:
+
+```markdown
+## 📋 Documentation File Inventory
+
+### Patterns (`docs/patterns/`)
+- ✅ `patterns/api-patterns.md` - Backend API design conventions
+- ✅ `patterns/component-patterns.md` - Frontend component structure
+- ❌ `patterns/testing-patterns.md` - Not referenced in main README
+
+### Specifications (`docs/specs/`)
+- ✅ `specs/feature-x.md` - Feature X technical specification
+- ❌ `specs/feature-y.md` - Not referenced in main README
+
+### Workflows (`docs/workflows/`)
+- ✅ `workflows/development.md` - Development process and tools
+- ✅ `workflows/deployment.md` - Deployment procedures
+
+### Decisions (`docs/decisions/`)
+- ❌ `decisions/0001-use-typescript.md` - Not referenced in main README
+- ❌ `decisions/0002-choose-database.md` - Not referenced in main README
+
+### Other Files
+- ✅ `README.md` - Main documentation hub
+- ❌ `archive/old-guide.md` - Archived content (may not need indexing)
+- ❌ `templates/template.md` - Template file (may not need indexing)
+
+### Summary
+- **Total files found**: 11
+- **Referenced in existing indexes**: 5
+- **Missing from indexes**: 6
+- **Potential exclusions**: 2 (archive/templates)
+```
+
+**Cross-reference with existing indexes**:
+- Compare inventory against `docs/README.md` (if it exists)
+- Identify files present in filesystem but missing from index
+- Identify files referenced in index but missing from filesystem (broken links)
+
+**Show the inventory to the user** and ask:
+- "I found [X] documentation files. [Y] are not currently indexed. Should these be added?"
+- "Found [Z] broken references. Should these be removed or are files missing?"
+- "Found archived/template files. Should these be excluded from the index?"
+
+---
+
 ### Step 3: Create Documentation Index
 
 **Create** `.makeflow/project/index.md` with the following structure:
@@ -137,7 +212,120 @@ Include: `[root docs folder]/**/*` (everything)
 
 ---
 
-### Step 4: Validate with User
+### Step 4: Create Documentation Index
+
+**Create** `.makeflow/project/index.md` based on the deep scan results from Step 3.5.
+
+Follow the structure from Step 3, but ensure ALL discovered files are represented:
+- Files already indexed → Listed with descriptions
+- Files missing from index → Added with descriptions
+- Broken references → Removed or flagged for user attention
+
+---
+
+### Step 4.5: Validate Index Completeness
+
+**Purpose**: Ensure all discovered documentation is properly indexed before finalizing.
+
+**Check 1: Are all markdown files referenced?**
+
+Compare the file inventory from Step 3.5 against the generated index:
+
+```bash
+# Get list of actual files (excluding README, templates, archives)
+find [DOCS_ROOT] -type f -name "*.md" \
+  ! -name "README.md" \
+  ! -path "*/templates/*" \
+  ! -path "*/archive/*" \
+  ! -path "*/node_modules/*" \
+  ! -path "*/.git/*" \
+  | sort > /tmp/actual-files.txt
+
+# Get list of files referenced in index (extract from .makeflow/project/index.md)
+grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | sed 's/\.\./\.\.\//g' | sort > /tmp/indexed-files.txt
+
+# Find files not in index
+comm -23 /tmp/actual-files.txt /tmp/indexed-files.txt > /tmp/missing-from-index.txt
+
+# Show results
+if [ -s /tmp/missing-from-index.txt ]; then
+  echo "⚠️  Files missing from index:"
+  cat /tmp/missing-from-index.txt
+else
+  echo "✅ All files are indexed"
+fi
+```
+
+**If files are missing from index**:
+- List them for the user
+- Ask: "Should these be added to the index?"
+- If yes → Update `.makeflow/project/index.md` and `docs/README.md` (if applicable)
+- If no → Document why they're excluded (e.g., templates, drafts, archives)
+
+**Check 2: Are there broken references?**
+
+Verify all files referenced in the index actually exist:
+
+```bash
+# Check each reference in .makeflow/project/index.md
+grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | while read file; do
+  if [ ! -f "$file" ]; then
+    echo "❌ Broken reference: $file"
+  fi
+done
+
+# Check each link in docs/README.md (if exists)
+if [ -f "docs/README.md" ]; then
+  grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/\1/' | while read file; do
+    if [ ! -f "docs/$file" ]; then
+      echo "❌ Broken link in README: docs/$file"
+    fi
+  done
+fi
+```
+
+**If broken references found**:
+- List them for the user
+- Ask: "Should these be removed, or are the files missing?"
+- If remove → Update both indexes to remove references
+- If missing → Ask user to restore files or provide correct paths
+
+**Check 3: Validate index format**
+
+Ensure both indexes follow proper structure:
+- `.makeflow/project/index.md` has all required sections
+- `docs/README.md` has navigation links (if exists)
+- Relative paths are correct
+- Markdown formatting is valid
+
+**Present validation summary**:
+
+```markdown
+## 📋 Index Validation Summary
+
+### Completeness
+- ✅ Total documentation files: [X]
+- ✅ Files indexed: [Y]
+- ⚠️  Files not indexed: [Z] (see list above)
+
+### Integrity
+- ✅ Broken references: [N] (see list above)
+- ✅ Valid references: [M]
+
+### Next Steps
+- [ ] Add [Z] missing files to index
+- [ ] Fix [N] broken references
+- [ ] Review and approve final index
+```
+
+**Iterate until validation passes**:
+- Fix issues identified
+- Re-run validation
+- Repeat until all checks pass
+
+---
+
+### Step 5: Validate with User
 
 **Show the generated index** to the user in a clear, readable format.
 
@@ -154,7 +342,7 @@ Include: `[root docs folder]/**/*` (everything)
 
 ---
 
-### Step 5: Finalize and Commit
+### Step 6: Finalize and Commit
 
 **Save the file**:
 ```bash
@@ -177,7 +365,7 @@ Documentation entry point: [PATH_TO_MAIN_DOC]"
 
 ---
 
-### Step 6: Provide Next Steps
+### Step 7: Provide Next Steps
 
 **Show the user**:
 ```markdown
@@ -223,6 +411,152 @@ When completing features, use:
 ```
 
 This workflow will check if documentation needs updates based on your changes.
+```
+
+---
+
+## Documentation Index Best Practices
+
+### When to Update Indexes
+
+**ALWAYS update indexes when**:
+- ✅ Creating new documentation files in major categories (patterns/specs/workflows/decisions)
+- ✅ Moving documentation files to new locations (e.g., `docs/file.md` → `docs/patterns/file.md`)
+- ✅ Renaming documentation files (e.g., `old-name.md` → `new-name.md`)
+- ✅ Removing or archiving documentation files
+- ✅ Changing documentation organization or structure (e.g., reorganizing patterns)
+- ✅ Creating new documentation categories (e.g., adding `docs/guides/`)
+
+**Indexes to keep synchronized**:
+- 📄 `docs/README.md` - Main documentation hub (user-facing, human-readable)
+- 🤖 `.makeflow/project/index.md` - AI agent reference (machine-readable, context provider)
+
+### How to Keep Indexes Synchronized
+
+**For each documentation change**:
+
+1. **Update the file itself** - Make your documentation changes
+2. **Update `docs/README.md`** - If file is in a major category
+   - Add link to new files with descriptive text
+   - Update links for moved files
+   - Remove links for deleted files
+   - Update descriptions if content changed significantly
+3. **Update `.makeflow/project/index.md`** - If file is in a major category
+   - Add entries for new files with brief descriptions
+   - Update paths for moved files
+   - Remove entries for deleted files
+   - Keep AI agent quick reference section current
+4. **Test all links** - Verify both indexes have working links
+5. **Commit all changes together** - Use a single commit for documentation + index updates
+
+**Validation frequency**:
+- ✅ **After any documentation changes** - Run quick validation
+- ✅ **Before feature completion** - Deep validation to catch any missed updates
+- ✅ **Monthly or before major releases** - Comprehensive audit
+- ✅ **During PR reviews** - Spot check that indexes match changes
+
+### Common Pitfalls to Avoid
+
+**❌ DON'T**:
+- Move files without updating index links → Results in broken links
+- Add new docs without adding to indexes → New docs become "hidden" and undiscoverable
+- Rename files without search-and-replace in indexes → Old references become stale
+- Remove files without removing index entries → Broken links confuse users
+- Create new documentation categories without updating index structure → Inconsistent organization
+- Batch many doc changes without checking indexes → Compounding drift
+- Assume indexes "auto-update" → They don't; manual maintenance required
+
+**✅ DO**:
+- Update files and indexes in the same commit → Atomic changes prevent drift
+- Use descriptive link text in indexes → Helps users and AI agents find relevant docs
+- Keep index descriptions concise → One-line summaries are sufficient
+- Link liberally within documentation → Cross-references improve navigation
+- Review indexes during PR reviews → Catch issues before merge
+- Set calendar reminders for monthly audits → Proactive maintenance prevents large cleanup efforts
+
+### Validation Commands
+
+**Quick validation** - Check if indexes reference existing files:
+
+```bash
+# Extract links from docs/README.md
+grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/\1/' | while read file; do
+  if [ ! -f "docs/$file" ]; then
+    echo "❌ Broken link in docs/README.md: $file"
+  fi
+done
+
+# Check .makeflow/project/index.md references
+grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | while read file; do
+  if [ ! -f "$file" ]; then
+    echo "❌ Broken reference in index.md: $file"
+  fi
+done
+```
+
+**Find undocumented files** - Discover markdown files not in indexes:
+
+```bash
+# List all .md files in docs/ (excluding README.md itself)
+find docs/ -type f -name "*.md" ! -name "README.md" ! -path "*/node_modules/*" ! -path "*/.git/*" | sort
+
+# Compare against docs/README.md to find missing entries (manual review)
+```
+
+**Full validation** - Comprehensive check (run monthly or before releases):
+
+```bash
+# 1. Check for broken links in both indexes
+echo "=== Checking docs/README.md for broken links ==="
+grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/\1/' | while read file; do
+  if [ ! -f "docs/$file" ]; then
+    echo "❌ Broken: $file"
+  else
+    echo "✅ Valid: $file"
+  fi
+done
+
+echo ""
+echo "=== Checking .makeflow/project/index.md for broken references ==="
+grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | while read file; do
+  if [ ! -f "$file" ]; then
+    echo "❌ Broken: $file"
+  else
+    echo "✅ Valid: $file"
+  fi
+done
+
+# 2. List potentially missing files
+echo ""
+echo "=== Potentially undocumented files (review manually) ==="
+find docs/ -type f -name "*.md" ! -name "README.md" ! -path "*/.*" ! -name ".gitkeep" | sort
+```
+
+### Recovery from Drift
+
+**If indexes are severely out of sync**:
+
+1. **Run full validation** - Identify all discrepancies
+2. **Create an issue** - Document what needs fixing
+3. **Fix systematically**:
+   - Remove broken links first
+   - Add missing files next
+   - Update stale descriptions last
+4. **Verify fixes** - Re-run validation
+5. **Commit with clear message** - Explain what was synchronized
+6. **Set up preventive measures** - Add validation to PR checklist
+
+**Example recovery commit message**:
+```
+docs: Synchronize documentation indexes
+
+Fixed inconsistencies between actual docs and indexes:
+- Removed 3 broken links from docs/README.md
+- Added 5 missing pattern docs to indexes
+- Updated 2 file paths that had moved
+- Refreshed descriptions for 4 outdated entries
+
+All documentation is now discoverable and properly indexed.
 ```
 
 ---
@@ -341,4 +675,3 @@ Include: `docs/**/*` (everything)
 
 **Last Updated**: 2025-12-14  
 **Workflow Version**: 1.0.0
-

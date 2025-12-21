@@ -298,6 +298,79 @@ touch docs/patterns/.gitkeep docs/specs/.gitkeep docs/decisions/.gitkeep
 
 ---
 
+### Step 4.5: Initialize Pattern/Spec Index Structure
+
+**Purpose**: Pre-populate index sections to make future additions easier and prevent drift.
+
+**For `docs/README.md`**, ensure the documentation sections include placeholders for common patterns even if empty:
+
+```markdown
+## 📚 Documentation Sections
+
+### 🎨 Patterns
+
+Development patterns and best practices:
+- SDK Patterns → *Will be populated as SDK patterns are identified*
+- API Patterns → *Will be populated as API patterns are defined*
+- Testing Patterns → *Will be populated as testing patterns emerge*
+- Form Patterns → *Will be populated as form patterns are established*
+- [Add pattern links here as they are created]
+
+### 📋 Specifications
+
+Technical specifications for features:
+- [Feature specs will be added here as features are planned]
+
+### ⚙️ Workflows
+
+Team workflows and processes:
+- [Documentation Guidelines](./workflows/documentation/guidelines.md)
+- [Additional workflow docs will be added here as processes are established]
+
+### 🗳️ Architecture Decisions
+
+Record of significant architectural decisions:
+- [ADRs will be added here as architectural decisions are made]
+```
+
+**For `.makeflow/project/index.md`**, include category descriptions with growth notes:
+
+```markdown
+### Patterns (`../../docs/patterns/`)
+Development patterns and best practices for this project.
+
+**Common Pattern Categories**:
+- SDK Patterns - *Will be populated as patterns emerge*
+- API Patterns - *Will be populated as patterns emerge*
+- Testing Patterns - *Will be populated as patterns emerge*
+- Form Patterns - *Will be populated as patterns emerge*
+
+*Note: This section grows organically as patterns are identified and documented during development.*
+
+### Specifications (`../../docs/specs/`)
+Technical specifications for features and components.
+
+*Will be populated as features are specified.*
+
+### Workflows (`../../docs/workflows/`)
+Team processes and development workflows:
+- **Documentation Guidelines** → How to add and organize documentation
+- *(Additional workflows will be added as processes are established)*
+
+### Decisions (`../../docs/decisions/`)
+Architecture Decision Records (ADRs) documenting significant technical choices.
+
+*Will be populated as architectural decisions are made.*
+```
+
+**Why this matters**:
+- Makes it obvious where new documentation should be added
+- Reduces cognitive load when adding new docs
+- Prevents documentation from being created without corresponding index entries
+- Provides visual structure even when sections are empty
+
+---
+
 ### Step 5: Create Makeflow Documentation Index
 
 **Create** `.makeflow/project/index.md`:
@@ -491,6 +564,152 @@ This documentation is designed to grow organically:
 
 ---
 
+## Documentation Index Best Practices
+
+### When to Update Indexes
+
+**ALWAYS update indexes when**:
+- ✅ Creating new documentation files in `docs/patterns/`, `docs/specs/`, `docs/workflows/`, or `docs/decisions/`
+- ✅ Moving documentation files to new locations (e.g., `docs/file.md` → `docs/patterns/file.md`)
+- ✅ Renaming documentation files (e.g., `old-name.md` → `new-name.md`)
+- ✅ Removing or archiving documentation files
+- ✅ Changing documentation organization or structure (e.g., reorganizing patterns)
+- ✅ Creating new documentation categories (e.g., adding `docs/guides/`)
+
+**Indexes to keep synchronized**:
+- 📄 `docs/README.md` - Main documentation hub (user-facing, human-readable)
+- 🤖 `.makeflow/project/index.md` - AI agent reference (machine-readable, context provider)
+
+### How to Keep Indexes Synchronized
+
+**For each documentation change**:
+
+1. **Update the file itself** - Make your documentation changes
+2. **Update `docs/README.md`** - If file is in a major category (patterns/specs/workflows/decisions)
+   - Add link to new files
+   - Update links for moved files
+   - Remove links for deleted files
+   - Update descriptions if content changed significantly
+3. **Update `.makeflow/project/index.md`** - If file is in a major category
+   - Add entries for new files with brief descriptions
+   - Update paths for moved files
+   - Remove entries for deleted files
+   - Keep AI agent quick reference section current
+4. **Test all links** - Verify both indexes have working links
+5. **Commit all changes together** - Use a single commit for documentation + index updates
+
+**Validation frequency**:
+- ✅ **After any documentation changes** - Run quick validation
+- ✅ **Before feature completion** - Deep validation to catch any missed updates
+- ✅ **Monthly or before major releases** - Comprehensive audit
+- ✅ **During PR reviews** - Spot check that indexes match changes
+
+### Common Pitfalls to Avoid
+
+**❌ DON'T**:
+- Move files without updating index links → Results in broken links
+- Add new docs without adding to indexes → New docs become "hidden" and undiscoverable
+- Rename files without search-and-replace in indexes → Old references become stale
+- Remove files without removing index entries → Broken links confuse users
+- Create new documentation categories without updating index structure → Inconsistent organization
+- Batch many doc changes without checking indexes → Compounding drift
+- Assume indexes "auto-update" → They don't; manual maintenance required
+
+**✅ DO**:
+- Update files and indexes in the same commit → Atomic changes prevent drift
+- Use descriptive link text in indexes → Helps users and AI agents find relevant docs
+- Keep index descriptions concise → One-line summaries are sufficient
+- Link liberally within documentation → Cross-references improve navigation
+- Review indexes during PR reviews → Catch issues before merge
+- Set calendar reminders for monthly audits → Proactive maintenance prevents large cleanup efforts
+
+### Validation Commands
+
+**Quick validation** - Check if indexes reference existing files:
+
+```bash
+# Extract links from docs/README.md
+grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/\1/' | while read file; do
+  if [ ! -f "docs/$file" ]; then
+    echo "❌ Broken link in docs/README.md: $file"
+  fi
+done
+
+# Check .makeflow/project/index.md references
+grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | while read file; do
+  if [ ! -f "$file" ]; then
+    echo "❌ Broken reference in index.md: $file"
+  fi
+done
+```
+
+**Find undocumented files** - Discover markdown files not in indexes:
+
+```bash
+# List all .md files in docs/ (excluding README.md itself)
+find docs/ -type f -name "*.md" ! -name "README.md" ! -path "*/node_modules/*" ! -path "*/.git/*" | sort
+
+# Compare against docs/README.md to find missing entries (manual review)
+```
+
+**Full validation** - Comprehensive check (run monthly or before releases):
+
+```bash
+# 1. Check for broken links in both indexes
+echo "=== Checking docs/README.md for broken links ==="
+grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/\1/' | while read file; do
+  if [ ! -f "docs/$file" ]; then
+    echo "❌ Broken: $file"
+  else
+    echo "✅ Valid: $file"
+  fi
+done
+
+echo ""
+echo "=== Checking .makeflow/project/index.md for broken references ==="
+grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | while read file; do
+  if [ ! -f "$file" ]; then
+    echo "❌ Broken: $file"
+  else
+    echo "✅ Valid: $file"
+  fi
+done
+
+# 2. List potentially missing files
+echo ""
+echo "=== Potentially undocumented files (review manually) ==="
+find docs/ -type f -name "*.md" ! -name "README.md" ! -path "*/.*" ! -name ".gitkeep" | sort
+```
+
+### Recovery from Drift
+
+**If indexes are severely out of sync**:
+
+1. **Run full validation** - Identify all discrepancies
+2. **Create an issue** - Document what needs fixing
+3. **Fix systematically**:
+   - Remove broken links first
+   - Add missing files next
+   - Update stale descriptions last
+4. **Verify fixes** - Re-run validation
+5. **Commit with clear message** - Explain what was synchronized
+6. **Set up preventive measures** - Add validation to PR checklist
+
+**Example recovery commit message**:
+```
+docs: Synchronize documentation indexes
+
+Fixed inconsistencies between actual docs and indexes:
+- Removed 3 broken links from docs/README.md
+- Added 5 missing pattern docs to indexes
+- Updated 2 file paths that had moved
+- Refreshed descriptions for 4 outdated entries
+
+All documentation is now discoverable and properly indexed.
+```
+
+---
+
 ## Success Criteria
 
 - [ ] Project information gathered from user
@@ -581,4 +800,3 @@ Top-level containers for projects, typically representing different teams or dep
 
 **Last Updated**: 2025-12-14  
 **Workflow Version**: 1.0.0
-
