@@ -44,41 +44,23 @@
 
 **Check 1: Verify index references are valid**
 
-```bash
-# Check for broken links in docs/README.md
-echo "=== Validating docs/README.md links ==="
-if [ -f "docs/README.md" ]; then
-  grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/\1/' | while read file; do
-    if [ ! -f "docs/$file" ]; then
-      echo "❌ Broken link: docs/$file"
-    fi
-  done
-fi
+For `docs/README.md` (if exists):
+1. Extract all markdown links (format: `[text](./path/to/file.md)`)
+2. Parse out the file paths
+3. For each path, verify the file exists at `docs/[path]`
+4. Report: "❌ Broken link: [path]" for any missing files
 
-# Check for broken references in .makeflow/project/index.md
-echo "=== Validating .makeflow/project/index.md references ==="
-if [ -f ".makeflow/project/index.md" ]; then
-  grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | while read file; do
-    if [ ! -f "$file" ]; then
-      echo "❌ Broken reference: $file"
-    fi
-  done
-fi
-```
+For `.makeflow/project/index.md` (if exists):
+1. Extract all documentation file references (format: `` `../../docs/path/to/file.md` ``)
+2. For each reference, verify the file exists at that path
+3. Report: "❌ Broken reference: [path]" for any missing files
 
 **Check 2: Find potentially undocumented files**
 
-```bash
-# List documentation files not in main README
-echo "=== Checking for undocumented files ==="
-find docs/ -type f -name "*.md" \
-  ! -name "README.md" \
-  ! -path "*/templates/*" \
-  ! -path "*/archive/*" \
-  ! -path "*/node_modules/*" \
-  ! -path "*/.git/*" \
-  | sort
-```
+1. List all markdown files in `docs/` folder
+2. Exclude: `README.md` (the index itself), `templates/`, `archive/`, `node_modules`, `.git`
+3. Sort the results
+4. Display for review
 
 **Report to user**:
 
@@ -326,34 +308,30 @@ Update `.makeflow/work/[feature-name]/AGENTS.md`:
 
 **Check for new documentation files**:
 
-```bash
-# Find markdown files added in this feature
-echo "=== New documentation files in this feature ==="
-git diff --name-status main...HEAD | grep "^A.*\.md$" | awk '{print $2}' | grep "^docs/"
-```
+1. Use git to identify files added in current feature branch:
+   - Compare current branch against main branch
+   - Filter for `.md` files with "Added" status
+   - Filter for files in `docs/` folder
+2. Display: "=== New documentation files in this feature ==="
 
 **For each new file found**:
 1. **Check if listed in `docs/README.md`**:
-   ```bash
-   # Check if file is referenced
-   NEW_FILE="patterns/new-pattern.md"  # example
-   grep "$NEW_FILE" docs/README.md
-   ```
+   - Search for the filename in the README
+   - Verify it has a proper markdown link entry
 2. **Check if listed in `.makeflow/project/index.md`**:
-   ```bash
-   grep "$NEW_FILE" .makeflow/project/index.md
-   ```
+   - Search for the file path reference in the index
+   - Verify it's listed in appropriate category
 3. **If missing**, add appropriate reference with description:
    - In `docs/README.md`: Add as markdown link with description
    - In `.makeflow/project/index.md`: Add to appropriate category section
 
 **Check for moved/renamed files**:
 
-```bash
-# Find renamed or moved markdown files
-echo "=== Moved/renamed documentation files in this feature ==="
-git diff --name-status main...HEAD | grep "^R.*\.md$" | grep "docs/"
-```
+1. Use git to identify renamed/moved files:
+   - Compare current branch against main branch
+   - Filter for `.md` files with "Renamed" status
+   - Filter for files in `docs/` folder
+2. Display: "=== Moved/renamed documentation files in this feature ==="
 
 **For each moved/renamed file**:
 1. **Update paths in `docs/README.md`**:
@@ -363,53 +341,39 @@ git diff --name-status main...HEAD | grep "^R.*\.md$" | grep "docs/"
    - Find old path references
    - Replace with new path
 3. **Check for internal links** that may need updating:
-   ```bash
-   # Find files that link to the moved file
-   OLD_PATH="old-location/file.md"
-   grep -r "\($OLD_PATH\)" docs/ --include="*.md"
-   ```
+   - Search all markdown files in `docs/` for references to old path
+   - Update any internal cross-references to use new path
 
 **Check for removed files**:
 
-```bash
-# Find deleted markdown files
-echo "=== Removed documentation files in this feature ==="
-git diff --name-status main...HEAD | grep "^D.*\.md$" | grep "docs/"
-```
+1. Use git to identify deleted files:
+   - Compare current branch against main branch
+   - Filter for `.md` files with "Deleted" status
+   - Filter for files in `docs/` folder
+2. Display: "=== Removed documentation files in this feature ==="
 
 **For each removed file**:
 1. **Remove from `docs/README.md`** - Delete link entry
 2. **Remove from `.makeflow/project/index.md`** - Delete reference
 3. **Check for broken internal links**:
-   ```bash
-   # Find files that still link to the removed file
-   REMOVED_FILE="removed-file.md"
-   grep -r "\($REMOVED_FILE\)" docs/ --include="*.md"
-   ```
+   - Search all markdown files in `docs/` for references to removed file
+   - Report any files that still link to it (need manual cleanup)
 
 **Validate: Run final index scan**:
 
-```bash
-# Quick validation after updates
-echo "=== Final validation ==="
+1. Display: "=== Final validation ==="
 
-# Check for broken links
-echo "Checking docs/README.md..."
-grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/\1/' | while read file; do
-  if [ ! -f "docs/$file" ]; then
-    echo "❌ Broken link: docs/$file"
-  fi
-done
+2. **Check for broken links in `docs/README.md`**:
+   - Extract all markdown links
+   - For each link, verify the file exists
+   - Report: "❌ Broken link: [path]" for missing files
 
-echo "Checking .makeflow/project/index.md..."
-grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | while read file; do
-  if [ ! -f "$file" ]; then
-    echo "❌ Broken reference: $file"
-  fi
-done
+3. **Check for broken references in `.makeflow/project/index.md`**:
+   - Extract all file path references
+   - For each reference, verify the file exists
+   - Report: "❌ Broken reference: [path]" for missing files
 
-echo "✅ Validation complete"
-```
+4. Display: "✅ Validation complete" (if no issues)
 
 **If validation finds issues**:
 - Fix them before proceeding
@@ -418,20 +382,13 @@ echo "✅ Validation complete"
 
 **Commit index updates**:
 
-```bash
-# Commit documentation and index changes together
-git add docs/ .makeflow/project/index.md
-git commit -m "docs: Update documentation for [feature-name]
-
-Updated documentation:
-- Added/Updated [list files]
-- Updated indexes to reflect new/moved/removed files
-- All links validated and working
-
-Indexes synchronized:
-- docs/README.md
-- .makeflow/project/index.md"
-```
+1. Stage all documentation changes: `docs/` folder and `.makeflow/project/index.md`
+2. Create commit with clear message describing what was updated
+3. Include in commit message:
+   - List of added/updated documentation files
+   - Note that indexes were updated to reflect changes
+   - Confirmation that all links are validated and working
+   - List of synchronized indexes (docs/README.md, .makeflow/project/index.md)
 
 ---
 
@@ -499,180 +456,86 @@ Ready to proceed?
 
 ---
 
-## Documentation Validation Commands
+## Documentation Validation Approach
 
-**Quick Reference**: Reusable bash commands for validating documentation indexes.
+**Quick Reference**: Conceptual approach for validating documentation indexes. Each AI agent or developer can implement these checks using their preferred tools and environment.
 
 ### Check for Broken Links
 
-**In docs/README.md**:
-```bash
-# Extract and validate all relative markdown links
-grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/\1/' | while read file; do
-  if [ ! -f "docs/$file" ]; then
-    echo "❌ Broken link in docs/README.md: $file"
-  else
-    echo "✅ Valid: $file"
-  fi
-done
-```
+**Validate `docs/README.md`**:
+1. Extract all relative markdown links (format: `[text](./path/to/file.md)`)
+2. Parse out the file paths from these links
+3. For each path, verify the file exists at `docs/[path]`
+4. Report: "❌ Broken link in docs/README.md: [path]" for missing files
+5. Report: "✅ Valid: [path]" for existing files
 
-**In .makeflow/project/index.md**:
-```bash
-# Extract and validate all documentation references
-grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | while read file; do
-  if [ ! -f "$file" ]; then
-    echo "❌ Broken reference in index.md: $file"
-  else
-    echo "✅ Valid: $file"
-  fi
-done
-```
+**Validate `.makeflow/project/index.md`**:
+1. Extract all documentation file references (format: `` `../../docs/path/to/file.md` ``)
+2. For each reference, verify the file exists at that path
+3. Report: "❌ Broken reference in index.md: [path]" for missing files
+4. Report: "✅ Valid: [path]" for existing files
 
 ### Find Undocumented Files
 
 **List all documentation files**:
-```bash
-# Find all .md files excluding special files
-find docs/ -type f -name "*.md" \
-  ! -name "README.md" \
-  ! -path "*/templates/*" \
-  ! -path "*/archive/*" \
-  ! -path "*/node_modules/*" \
-  ! -path "*/.git/*" \
-  ! -name ".gitkeep" \
-  | sort
-```
+1. Find all `.md` files in `docs/` folder recursively
+2. Exclude: `README.md`, `templates/` folder, `archive/` folder, `node_modules`, `.git`, `.gitkeep` files
+3. Sort results for consistent ordering
 
-**Compare against indexes** (manual review):
-```bash
-# Save actual files to temp file
-find docs/ -type f -name "*.md" ! -name "README.md" | sort > /tmp/actual-docs.txt
-
-# Extract referenced files from README
-grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/docs\/\1/' | sort > /tmp/indexed-docs.txt
-
-# Show files not in index
-echo "=== Files not referenced in docs/README.md ==="
-comm -23 /tmp/actual-docs.txt /tmp/indexed-docs.txt
-```
+**Compare against indexes** (requires manual review):
+1. Save list of actual files
+2. Extract all file references from `docs/README.md`
+3. Compare the two lists to find files that exist but aren't referenced
+4. Display: "=== Files not referenced in docs/README.md ===" followed by the list
 
 ### Check Git Changes
 
 **Find documentation files changed in current branch**:
-```bash
-# Compare against main branch
-git diff --name-only main...HEAD | grep '^docs/.*\.md$'
-```
+- Use git to compare current branch against main branch
+- Filter results to show only `.md` files in `docs/` folder
 
 **Find new documentation files**:
-```bash
-git diff --name-status main...HEAD | grep "^A.*\.md$" | awk '{print $2}' | grep "^docs/"
-```
+- Use git to compare branches and show "Added" files
+- Filter for `.md` files in `docs/` folder
 
 **Find moved/renamed files**:
-```bash
-git diff --name-status main...HEAD | grep "^R.*\.md$" | grep "docs/"
-```
+- Use git to compare branches and show "Renamed" files
+- Filter for `.md` files in `docs/` folder
 
 **Find deleted files**:
-```bash
-git diff --name-status main...HEAD | grep "^D.*\.md$" | grep "docs/"
-```
+- Use git to compare branches and show "Deleted" files
+- Filter for `.md` files in `docs/` folder
 
-### Full Validation Script
+### Full Validation Workflow
 
-**Complete validation** (run before committing documentation changes):
+**Complete validation** (recommended before committing documentation changes):
 
-```bash
-#!/bin/bash
-# Comprehensive documentation validation
+1. **Display header**: "📚 Documentation Index Validation"
 
-echo "═══════════════════════════════════════"
-echo "📚 Documentation Index Validation"
-echo "═══════════════════════════════════════"
+2. **Check 1: Validate docs/README.md**
+   - If file exists: Extract and check all links
+   - Report broken links or "✅ All links valid"
+   - If file doesn't exist: "⚠️ docs/README.md not found"
 
-ERRORS=0
+3. **Check 2: Validate .makeflow/project/index.md**
+   - If file exists: Extract and check all references
+   - Report broken references or "✅ All references valid"
+   - If file doesn't exist: "⚠️ .makeflow/project/index.md not found"
 
-# Check 1: Broken links in docs/README.md
-echo ""
-echo "1️⃣  Checking docs/README.md for broken links..."
-if [ -f "docs/README.md" ]; then
-  BROKEN=$(grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/\1/' | while read file; do
-    if [ ! -f "docs/$file" ]; then
-      echo "❌ Broken: docs/$file"
-      ((ERRORS++))
-    fi
-  done)
-  
-  if [ -z "$BROKEN" ]; then
-    echo "✅ All links valid"
-  else
-    echo "$BROKEN"
-  fi
-else
-  echo "⚠️  docs/README.md not found"
-fi
+4. **Check 3: Find undocumented files**
+   - Find all markdown files (excluding special files)
+   - If none found: "✅ No documentation files found (or all indexed)"
+   - If found: Display list with note "verify they're indexed"
 
-# Check 2: Broken references in .makeflow/project/index.md
-echo ""
-echo "2️⃣  Checking .makeflow/project/index.md for broken references..."
-if [ -f ".makeflow/project/index.md" ]; then
-  BROKEN=$(grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | while read file; do
-    if [ ! -f "$file" ]; then
-      echo "❌ Broken: $file"
-      ((ERRORS++))
-    fi
-  done)
-  
-  if [ -z "$BROKEN" ]; then
-    echo "✅ All references valid"
-  else
-    echo "$BROKEN"
-  fi
-else
-  echo "⚠️  .makeflow/project/index.md not found"
-fi
+5. **Check 4: Check branch changes**
+   - Compare current branch against main
+   - Find changed `.md` files in `docs/`
+   - If none: "✅ No documentation changes in current branch"
+   - If found: Display list with note "ensure indexes are updated"
 
-# Check 3: Find potentially undocumented files
-echo ""
-echo "3️⃣  Checking for potentially undocumented files..."
-UNDOCUMENTED=$(find docs/ -type f -name "*.md" ! -name "README.md" ! -path "*/templates/*" ! -path "*/archive/*" ! -path "*/.*" | sort)
-if [ -z "$UNDOCUMENTED" ]; then
-  echo "✅ No documentation files found (or all indexed)"
-else
-  echo "Found these documentation files (verify they're indexed):"
-  echo "$UNDOCUMENTED"
-fi
-
-# Check 4: Check for files changed in current branch
-echo ""
-echo "4️⃣  Checking for documentation changes in current branch..."
-CHANGED=$(git diff --name-only HEAD main 2>/dev/null | grep '^docs/.*\.md$' || echo "")
-if [ -z "$CHANGED" ]; then
-  echo "✅ No documentation changes in current branch"
-else
-  echo "Changed files (ensure indexes are updated):"
-  echo "$CHANGED"
-fi
-
-# Summary
-echo ""
-echo "═══════════════════════════════════════"
-if [ $ERRORS -eq 0 ]; then
-  echo "✅ Validation complete - no errors found"
-else
-  echo "❌ Validation found $ERRORS error(s)"
-  echo "Please fix broken links before committing"
-  exit 1
-fi
-echo "═══════════════════════════════════════"
-```
-
-**Save as**: `.makeflow/scripts/validate-docs.sh` and make executable:
-```bash
-chmod +x .makeflow/scripts/validate-docs.sh
-```
+6. **Display summary**:
+   - If no errors: "✅ Validation complete - no errors found"
+   - If errors: "❌ Validation found [N] error(s) - Please fix broken links before committing"
 
 ---
 

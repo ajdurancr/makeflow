@@ -78,10 +78,9 @@ Categories detected: patterns, specs, workflows, decisions
 
 **Scan all markdown files** in the documentation area:
 
-```bash
-# Find all .md files in the documentation root
-find [DOCS_ROOT] -type f -name "*.md" ! -path "*/node_modules/*" ! -path "*/.git/*" ! -path "*/dist/*" | sort
-```
+1. Find all `.md` files in the documentation root folder
+2. Exclude special folders: `node_modules`, `.git`, `dist`, build artifacts
+3. Sort the results for consistent ordering
 
 **Categorize each file** found:
 
@@ -231,30 +230,23 @@ Follow the structure from Step 3, but ensure ALL discovered files are represente
 
 Compare the file inventory from Step 3.5 against the generated index:
 
-```bash
-# Get list of actual files (excluding README, templates, archives)
-find [DOCS_ROOT] -type f -name "*.md" \
-  ! -name "README.md" \
-  ! -path "*/templates/*" \
-  ! -path "*/archive/*" \
-  ! -path "*/node_modules/*" \
-  ! -path "*/.git/*" \
-  | sort > /tmp/actual-files.txt
+1. **Get list of actual files**:
+   - Find all `.md` files in documentation root
+   - Exclude: `README.md`, files in `templates/`, files in `archive/`, `node_modules`, `.git`
+   - Sort for consistent comparison
 
-# Get list of files referenced in index (extract from .makeflow/project/index.md)
-grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | sed 's/\.\./\.\.\//g' | sort > /tmp/indexed-files.txt
+2. **Get list of files referenced in index**:
+   - Extract all file path references from `.makeflow/project/index.md`
+   - Parse out the actual paths (typically in format `` `../../docs/path/to/file.md` ``)
+   - Sort for consistent comparison
 
-# Find files not in index
-comm -23 /tmp/actual-files.txt /tmp/indexed-files.txt > /tmp/missing-from-index.txt
-
-# Show results
-if [ -s /tmp/missing-from-index.txt ]; then
-  echo "⚠️  Files missing from index:"
-  cat /tmp/missing-from-index.txt
-else
-  echo "✅ All files are indexed"
-fi
-```
+3. **Find files not in index**:
+   - Compare the two lists
+   - Identify files that exist in filesystem but not in index
+   
+4. **Report results**:
+   - If files missing: "⚠️ Files missing from index: [list]"
+   - If all indexed: "✅ All files are indexed"
 
 **If files are missing from index**:
 - List them for the user
@@ -266,23 +258,16 @@ fi
 
 Verify all files referenced in the index actually exist:
 
-```bash
-# Check each reference in .makeflow/project/index.md
-grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | while read file; do
-  if [ ! -f "$file" ]; then
-    echo "❌ Broken reference: $file"
-  fi
-done
+1. **Check references in `.makeflow/project/index.md`**:
+   - Extract all file path references (format: `` `../../docs/path/to/file.md` ``)
+   - For each reference, verify the file exists at that path
+   - Report: "❌ Broken reference: [path]" for any missing files
 
-# Check each link in docs/README.md (if exists)
-if [ -f "docs/README.md" ]; then
-  grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/\1/' | while read file; do
-    if [ ! -f "docs/$file" ]; then
-      echo "❌ Broken link in README: docs/$file"
-    fi
-  done
-fi
-```
+2. **Check links in `docs/README.md`** (if it exists):
+   - Extract all markdown links (format: `[text](./path/to/file.md)`)
+   - Parse out the file paths
+   - For each path, verify the file exists at `docs/[path]`
+   - Report: "❌ Broken link in README: [path]" for any missing files
 
 **If broken references found**:
 - List them for the user
@@ -474,63 +459,46 @@ This workflow will check if documentation needs updates based on your changes.
 - Review indexes during PR reviews → Catch issues before merge
 - Set calendar reminders for monthly audits → Proactive maintenance prevents large cleanup efforts
 
-### Validation Commands
+### Validation Approach
 
 **Quick validation** - Check if indexes reference existing files:
 
-```bash
-# Extract links from docs/README.md
-grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/\1/' | while read file; do
-  if [ ! -f "docs/$file" ]; then
-    echo "❌ Broken link in docs/README.md: $file"
-  fi
-done
+**For `docs/README.md`**:
+1. Extract all markdown links (format: `[text](./path/to/file.md)`)
+2. Parse out the file paths from these links
+3. For each path, check if the file exists at `docs/[path]`
+4. Report any broken links (files that don't exist)
 
-# Check .makeflow/project/index.md references
-grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | while read file; do
-  if [ ! -f "$file" ]; then
-    echo "❌ Broken reference in index.md: $file"
-  fi
-done
-```
+**For `.makeflow/project/index.md`**:
+1. Extract all documentation file references (typically in format: `` `../../docs/path/to/file.md` ``)
+2. For each reference, check if the file exists at that path
+3. Report any broken references
 
 **Find undocumented files** - Discover markdown files not in indexes:
 
-```bash
-# List all .md files in docs/ (excluding README.md itself)
-find docs/ -type f -name "*.md" ! -name "README.md" ! -path "*/node_modules/*" ! -path "*/.git/*" | sort
-
-# Compare against docs/README.md to find missing entries (manual review)
-```
+1. **List all markdown files** in the `docs/` folder:
+   - Include all `.md` files recursively
+   - Exclude `README.md` at root (since it IS the index)
+   - Exclude special folders: `node_modules`, `.git`, `templates`, `archive`
+   - Exclude placeholder files like `.gitkeep`
+2. **Compare against index entries** - manually review which files are listed in `docs/README.md`
+3. **Identify gaps** - files that exist but aren't referenced anywhere
 
 **Full validation** - Comprehensive check (run monthly or before releases):
 
-```bash
-# 1. Check for broken links in both indexes
-echo "=== Checking docs/README.md for broken links ==="
-grep -o '\[.*\](\.\/.*\.md)' docs/README.md | sed 's/.*](\.\/\(.*\))/\1/' | while read file; do
-  if [ ! -f "docs/$file" ]; then
-    echo "❌ Broken: $file"
-  else
-    echo "✅ Valid: $file"
-  fi
-done
+1. **Check for broken links in `docs/README.md`**:
+   - Extract all markdown links
+   - Verify each linked file exists
+   - Report: "✅ Valid: [path]" or "❌ Broken: [path]"
 
-echo ""
-echo "=== Checking .makeflow/project/index.md for broken references ==="
-grep -o '\`\.\./\.\./docs/.*\.md\`' .makeflow/project/index.md | tr -d '`' | while read file; do
-  if [ ! -f "$file" ]; then
-    echo "❌ Broken: $file"
-  else
-    echo "✅ Valid: $file"
-  fi
-done
+2. **Check for broken references in `.makeflow/project/index.md`**:
+   - Extract all file path references
+   - Verify each file exists
+   - Report: "✅ Valid: [path]" or "❌ Broken: [path]"
 
-# 2. List potentially missing files
-echo ""
-echo "=== Potentially undocumented files (review manually) ==="
-find docs/ -type f -name "*.md" ! -name "README.md" ! -path "*/.*" ! -name ".gitkeep" | sort
-```
+3. **List potentially undocumented files**:
+   - Find all markdown files in `docs/` (excluding special files)
+   - Display for manual review against indexes
 
 ### Recovery from Drift
 
