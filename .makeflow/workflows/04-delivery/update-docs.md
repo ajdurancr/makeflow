@@ -33,6 +33,67 @@
 - **If it exists**: Review it to understand what documentation exists in this project and where it lives
 - **Purpose**: This helps you identify which documentation files need to be updated based on the project's documentation structure
 - **What to look for**: Documentation locations, existing guides, API reference locations, update procedures
+
+---
+
+### Step 0.5: Validate Current Documentation State
+
+**Purpose**: Ensure indexes are up-to-date before making changes to prevent compounding existing documentation drift.
+
+**Run validation checks** to compare actual files against indexes:
+
+**Check 1: Verify index references are valid**
+
+For `docs/README.md` (if exists):
+1. Extract all markdown links (format: `[text](./path/to/file.md)`)
+2. Parse out the file paths
+3. For each path, verify the file exists at `docs/[path]`
+4. Report: "❌ Broken link: [path]" for any missing files
+
+For `.makeflow/project/index.md` (if exists):
+1. Extract all documentation file references (format: `` `../../docs/path/to/file.md` ``)
+2. For each reference, verify the file exists at that path
+3. Report: "❌ Broken reference: [path]" for any missing files
+
+**Check 2: Find potentially undocumented files**
+
+1. List all markdown files in `docs/` folder
+2. Exclude: `README.md` (the index itself), `templates/`, `archive/`, `node_modules`, `.git`
+3. Sort the results
+4. Display for review
+
+**Report to user**:
+
+```markdown
+## 📋 Pre-Update Documentation Validation
+
+### Validation Results
+- Broken links in docs/README.md: [N]
+- Broken references in .makeflow/project/index.md: [M]
+- Potentially undocumented files: [X]
+
+### Status
+[✅ No issues found - indexes are synchronized]
+OR
+[⚠️  Found [N+M+X] inconsistencies in documentation indexes]
+```
+
+**If inconsistencies found**:
+- Show list of issues
+- Ask: "Should we fix these before updating docs for current feature?"
+- If user approves:
+  - Fix broken links (remove or update)
+  - Add missing files to indexes (with user guidance)
+  - Commit fixes separately before proceeding with feature documentation
+
+**Why this matters**:
+- Prevents compounding existing documentation drift
+- Ensures new documentation is added to clean, consistent indexes
+- Makes it easier to track what was added for this specific feature
+- Builds good documentation hygiene habits
+
+---
+
 ### Step 1: Identify Documentation Needs
 
 **Determine what needs updating**:
@@ -237,7 +298,101 @@ Update `.makeflow/work/[feature-name]/AGENTS.md`:
 - [List paths to updated docs]
 ```
 
-### Step 6: Present Documentation Updates
+---
+
+### Step 6: Update Documentation Indexes
+
+**Purpose**: Ensure all documentation updates are reflected in indexes.
+
+**After updating documentation files**, verify they are properly indexed:
+
+**Check for new documentation files**:
+
+1. Use git to identify files added in current feature branch:
+   - Compare current branch against main branch
+   - Filter for `.md` files with "Added" status
+   - Filter for files in `docs/` folder
+2. Display: "=== New documentation files in this feature ==="
+
+**For each new file found**:
+1. **Check if listed in `docs/README.md`**:
+   - Search for the filename in the README
+   - Verify it has a proper markdown link entry
+2. **Check if listed in `.makeflow/project/index.md`**:
+   - Search for the file path reference in the index
+   - Verify it's listed in appropriate category
+3. **If missing**, add appropriate reference with description:
+   - In `docs/README.md`: Add as markdown link with description
+   - In `.makeflow/project/index.md`: Add to appropriate category section
+
+**Check for moved/renamed files**:
+
+1. Use git to identify renamed/moved files:
+   - Compare current branch against main branch
+   - Filter for `.md` files with "Renamed" status
+   - Filter for files in `docs/` folder
+2. Display: "=== Moved/renamed documentation files in this feature ==="
+
+**For each moved/renamed file**:
+1. **Update paths in `docs/README.md`**:
+   - Find old path references
+   - Replace with new path
+2. **Update paths in `.makeflow/project/index.md`**:
+   - Find old path references
+   - Replace with new path
+3. **Check for internal links** that may need updating:
+   - Search all markdown files in `docs/` for references to old path
+   - Update any internal cross-references to use new path
+
+**Check for removed files**:
+
+1. Use git to identify deleted files:
+   - Compare current branch against main branch
+   - Filter for `.md` files with "Deleted" status
+   - Filter for files in `docs/` folder
+2. Display: "=== Removed documentation files in this feature ==="
+
+**For each removed file**:
+1. **Remove from `docs/README.md`** - Delete link entry
+2. **Remove from `.makeflow/project/index.md`** - Delete reference
+3. **Check for broken internal links**:
+   - Search all markdown files in `docs/` for references to removed file
+   - Report any files that still link to it (need manual cleanup)
+
+**Validate: Run final index scan**:
+
+1. Display: "=== Final validation ==="
+
+2. **Check for broken links in `docs/README.md`**:
+   - Extract all markdown links
+   - For each link, verify the file exists
+   - Report: "❌ Broken link: [path]" for missing files
+
+3. **Check for broken references in `.makeflow/project/index.md`**:
+   - Extract all file path references
+   - For each reference, verify the file exists
+   - Report: "❌ Broken reference: [path]" for missing files
+
+4. Display: "✅ Validation complete" (if no issues)
+
+**If validation finds issues**:
+- Fix them before proceeding
+- Re-run validation
+- Repeat until no issues remain
+
+**Commit index updates**:
+
+1. Stage all documentation changes: `docs/` folder and `.makeflow/project/index.md`
+2. Create commit with clear message describing what was updated
+3. Include in commit message:
+   - List of added/updated documentation files
+   - Note that indexes were updated to reflect changes
+   - Confirmation that all links are validated and working
+   - List of synchronized indexes (docs/README.md, .makeflow/project/index.md)
+
+---
+
+### Step 7: Present Documentation Updates
 
 ```markdown
 ---
@@ -301,23 +456,186 @@ Ready to proceed?
 
 ---
 
+## Documentation Validation Approach
+
+**Quick Reference**: Conceptual approach for validating documentation indexes. Each AI agent or developer can implement these checks using their preferred tools and environment.
+
+### Check for Broken Links
+
+**Validate `docs/README.md`**:
+1. Extract all relative markdown links (format: `[text](./path/to/file.md)`)
+2. Parse out the file paths from these links
+3. For each path, verify the file exists at `docs/[path]`
+4. Report: "❌ Broken link in docs/README.md: [path]" for missing files
+5. Report: "✅ Valid: [path]" for existing files
+
+**Validate `.makeflow/project/index.md`**:
+1. Extract all documentation file references (format: `` `../../docs/path/to/file.md` ``)
+2. For each reference, verify the file exists at that path
+3. Report: "❌ Broken reference in index.md: [path]" for missing files
+4. Report: "✅ Valid: [path]" for existing files
+
+### Find Undocumented Files
+
+**List all documentation files**:
+1. Find all `.md` files in `docs/` folder recursively
+2. Exclude: `README.md`, `templates/` folder, `archive/` folder, `node_modules`, `.git`, `.gitkeep` files
+3. Sort results for consistent ordering
+
+**Compare against indexes** (requires manual review):
+1. Save list of actual files
+2. Extract all file references from `docs/README.md`
+3. Compare the two lists to find files that exist but aren't referenced
+4. Display: "=== Files not referenced in docs/README.md ===" followed by the list
+
+### Check Git Changes
+
+**Find documentation files changed in current branch**:
+- Use git to compare current branch against main branch
+- Filter results to show only `.md` files in `docs/` folder
+
+**Find new documentation files**:
+- Use git to compare branches and show "Added" files
+- Filter for `.md` files in `docs/` folder
+
+**Find moved/renamed files**:
+- Use git to compare branches and show "Renamed" files
+- Filter for `.md` files in `docs/` folder
+
+**Find deleted files**:
+- Use git to compare branches and show "Deleted" files
+- Filter for `.md` files in `docs/` folder
+
+### Full Validation Workflow
+
+**Complete validation** (recommended before committing documentation changes):
+
+1. **Display header**: "📚 Documentation Index Validation"
+
+2. **Check 1: Validate docs/README.md**
+   - If file exists: Extract and check all links
+   - Report broken links or "✅ All links valid"
+   - If file doesn't exist: "⚠️ docs/README.md not found"
+
+3. **Check 2: Validate .makeflow/project/index.md**
+   - If file exists: Extract and check all references
+   - Report broken references or "✅ All references valid"
+   - If file doesn't exist: "⚠️ .makeflow/project/index.md not found"
+
+4. **Check 3: Find undocumented files**
+   - Find all markdown files (excluding special files)
+   - If none found: "✅ No documentation files found (or all indexed)"
+   - If found: Display list with note "verify they're indexed"
+
+5. **Check 4: Check branch changes**
+   - Compare current branch against main
+   - Find changed `.md` files in `docs/`
+   - If none: "✅ No documentation changes in current branch"
+   - If found: Display list with note "ensure indexes are updated"
+
+6. **Display summary**:
+   - If no errors: "✅ Validation complete - no errors found"
+   - If errors: "❌ Validation found [N] error(s) - Please fix broken links before committing"
+
+---
+
 ## Documentation Best Practices
 
-### ✅ DO:
+### When to Update Indexes
+
+**ALWAYS update indexes when**:
+- ✅ Creating new documentation files in `docs/patterns/`, `docs/specs/`, `docs/workflows/`, or `docs/decisions/`
+- ✅ Moving documentation files to new locations (e.g., `docs/file.md` → `docs/patterns/file.md`)
+- ✅ Renaming documentation files (e.g., `old-name.md` → `new-name.md`)
+- ✅ Removing or archiving documentation files
+- ✅ Changing documentation organization or structure (e.g., reorganizing patterns)
+- ✅ Creating new documentation categories (e.g., adding `docs/guides/`)
+
+**Indexes to keep synchronized**:
+- 📄 `docs/README.md` - Main documentation hub (user-facing, human-readable)
+- 🤖 `.makeflow/project/index.md` - AI agent reference (machine-readable, context provider)
+
+### How to Keep Indexes Synchronized
+
+**For each documentation change**:
+
+1. **Update the file itself** - Make your documentation changes
+2. **Update `docs/README.md`** - If file is in a major category (patterns/specs/workflows/decisions)
+   - Add link to new files
+   - Update links for moved files
+   - Remove links for deleted files
+   - Update descriptions if content changed significantly
+3. **Update `.makeflow/project/index.md`** - If file is in a major category
+   - Add entries for new files with brief descriptions
+   - Update paths for moved files
+   - Remove entries for deleted files
+   - Keep AI agent quick reference section current
+4. **Test all links** - Verify both indexes have working links
+5. **Commit all changes together** - Use a single commit for documentation + index updates
+
+**Validation frequency**:
+- ✅ **After any documentation changes** - Run quick validation (Step 6 in this workflow)
+- ✅ **Before creating PR** - Deep validation to catch any missed updates
+- ✅ **During PR reviews** - Spot check that indexes match changes
+- ✅ **Monthly or before major releases** - Comprehensive audit
+
+### Common Pitfalls to Avoid
+
+**❌ DON'T**:
+- Move files without updating index links → Results in broken links
+- Add new docs without adding to indexes → New docs become "hidden" and undiscoverable
+- Rename files without search-and-replace in indexes → Old references become stale
+- Remove files without removing index entries → Broken links confuse users
+- Create new documentation categories without updating index structure → Inconsistent organization
+- Batch many doc changes without checking indexes → Compounding drift
+- Assume indexes "auto-update" → They don't; manual maintenance required
+- Use jargon without explanation in docs
+- Skip examples in technical documentation
+- Write overly long docs without structure
+- Forget to update changelog
+- Leave broken links after moving files
+- Document implementation details users don't need
+
+**✅ DO**:
+- Update files and indexes in the same commit → Atomic changes prevent drift
+- Use descriptive link text in indexes → Helps users and AI agents find relevant docs
+- Keep index descriptions concise → One-line summaries are sufficient
+- Link liberally within documentation → Cross-references improve navigation
+- Review indexes during PR reviews → Catch issues before merge
+- Run validation before committing → Proactive error detection
 - Write for your audience (devs vs users)
 - Include code examples
 - Add screenshots for UI features
 - Keep examples simple and focused
-- Update changelog
-- Link related docs
+- Update changelog with every feature
 
-### ❌ DON'T:
-- Use jargon without explanation
-- Skip examples
-- Write overly long docs
-- Forget to update changelog
-- Leave broken links
-- Document implementation details users don't need
+### Recovery from Drift
+
+**If indexes are out of sync after feature work**:
+
+1. **Run full validation** - Use commands from "Documentation Validation Commands" section
+2. **Identify all discrepancies**:
+   - Broken links
+   - Missing entries for new files
+   - Stale entries for moved/removed files
+3. **Fix systematically**:
+   - Remove broken links first
+   - Add missing files next
+   - Update stale paths last
+4. **Verify fixes** - Re-run validation
+5. **Commit with clear message** - Explain what was synchronized
+
+**Example recovery commit message**:
+```
+docs: Synchronize documentation indexes for [feature-name]
+
+Fixed inconsistencies in documentation indexes:
+- Added 2 new pattern docs to indexes
+- Updated 1 file path that had moved
+- Removed 1 broken link from docs/README.md
+
+All documentation is now discoverable and properly indexed.
+```
 
 ---
 
@@ -470,4 +788,3 @@ or
 ---
 
 **End of Workflow**
-
