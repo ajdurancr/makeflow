@@ -137,25 +137,40 @@ Single file that AI agents read to understand:
 
 ## Works with Any AI Tool
 
-### Codegen
+### Claude Code / Cursor (with Slash Commands)
+
+**Fastest way** - Use built-in slash commands:
+
+```markdown
+/01-from-ticket
+Ticket: ASG-145
+```
+
+**Available commands**: `/00-*` (setup), `/01-*` (intake), `/02-*` (planning), `/03-*` (execution), `/04-*` (delivery)
+
+See **[Slash Commands Guide](.makeflow/framework/SLASH-COMMANDS.md)** for complete reference.
+
+### Direct Workflow Usage
+
+#### Codegen
 ```markdown
 @codegen Use .makeflow/workflows/01-intake/from-ticket.md
 Ticket: ASG-145
 ```
 
-### Cursor IDE
+#### Cursor IDE
 ```markdown
 @Cursor Follow .makeflow/workflows/01-intake/from-ticket.md
 Ticket: ASG-145
 ```
 
-### Claude Code
+#### Claude Code
 ```markdown
 @Claude Execute .makeflow/workflows/01-intake/from-ticket.md
 Context: Ticket ASG-145
 ```
 
-### Any AI Tool
+#### Any AI Tool
 Copy-paste the workflow content and provide your context!
 
 See [MULTI-TOOL.md](.makeflow/framework/MULTI-TOOL.md) for detailed integration guide.
@@ -163,6 +178,8 @@ See [MULTI-TOOL.md](.makeflow/framework/MULTI-TOOL.md) for detailed integration 
 ---
 
 ## Quick Examples
+
+**Note**: Examples below show direct workflow paths. With slash commands (Claude Code/Cursor), use `/01-from-bug`, `/03-execute-quick`, etc. See [Slash Commands Guide](.makeflow/framework/SLASH-COMMANDS.md).
 
 ### Simple Bug Fix (30 minutes)
 ```markdown
@@ -175,6 +192,17 @@ Bug: Excel export fails with special characters
 # Create PR and complete
 @ai Use .makeflow/workflows/04-delivery/create-pr.md
 @ai Use .makeflow/workflows/04-delivery/complete.md
+```
+
+**With slash commands**:
+```markdown
+/01-from-bug
+Bug: Excel export fails with special characters
+
+# After AI investigates:
+/03-execute-quick
+/04-create-pr
+/04-complete
 ```
 
 ### Medium Feature (4-8 hours)
@@ -254,6 +282,18 @@ makeflow provides:
 
 ```
 your-project/
+├── .agents/
+│   └── commands/                      # Centralized slash commands
+│       ├── 00-bootstrap-docs.md
+│       ├── 01-from-ticket.md
+│       ├── 02-create-plan.md
+│       ├── 03-execute-task.md
+│       ├── 04-create-pr.md
+│       └── ...
+├── .claude/
+│   └── commands -> ../.agents/commands   # Symlink for Claude Code
+├── .cursor/
+│   └── commands -> ../.agents/commands   # Symlink for Cursor
 ├── .makeflow/
 │   ├── README.md                      # System overview
 │   ├── VERSION                        # Makeflow version (for updates)
@@ -305,6 +345,7 @@ your-project/
 
 ## Documentation
 
+- **[Slash Commands Guide](.makeflow/framework/SLASH-COMMANDS.md)** - Quick workflow access in Claude Code/Cursor
 - **[Complete Guide](.makeflow/framework/GUIDE.md)** - Everything you need to know
 - **[Multi-Tool Integration](.makeflow/framework/MULTI-TOOL.md)** - Using different AI tools
 - **[Design Decisions & FAQ](.makeflow/framework/DECISIONS.md)** - Why makeflow is designed this way
@@ -436,6 +477,7 @@ Inspired by countless hours of AI-assisted development and the lessons learned a
 
 ## Quick Links
 
+- **[⚡ Slash Commands](.makeflow/framework/SLASH-COMMANDS.md)** - Quick access in Claude Code/Cursor
 - **[📚 Complete Guide](.makeflow/framework/GUIDE.md)** - Start here
 - **[🔧 Workflows](.makeflow/workflows/)** - Browse all workflows
 - **[🤖 Multi-Tool Guide](.makeflow/framework/MULTI-TOOL.md)** - Codegen, Cursor, Claude, etc.
@@ -446,6 +488,13 @@ Inspired by countless hours of AI-assisted development and the lessons learned a
 
 **Ready to start?** Try your first workflow:
 
+**With slash commands** (Claude Code/Cursor):
+```markdown
+/01-from-ticket
+Ticket: YOUR-TICKET-ID
+```
+
+**Direct path** (any AI tool):
 ```markdown
 @ai Use .makeflow/workflows/01-intake/from-ticket.md
 
